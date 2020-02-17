@@ -156,6 +156,7 @@ class DDRParsedData(object):
         money_score = int(self.play_money_score.value)
         if money_score > 1000000:
             self.play_money_score.value = str(money_score - 1000000)
+            money_score = money_score - 1000000
 
         # Generate letter grade (Ace Scoring)
         if money_score >= 990000:
