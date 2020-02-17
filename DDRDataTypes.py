@@ -1,6 +1,7 @@
 from PIL import Image
 import PIL
 import PIL.ImageOps
+import PIL.ImageFilter
 import pytesseract
 
 
@@ -82,13 +83,16 @@ class DDRPartData(object):
     config = None
     parsed = False
 
-    def __init__(self, config="", invert=False):
+    def __init__(self, config="", invert=False, sharpen=False):
         self.config = config
         self.invert = invert
+        self.sharpen = sharpen
 
     def parse_from(self, i):
         if self.invert:
             i = PIL.ImageOps.invert(i)
+        if self.sharpen:
+            i = i.filter(PIL.ImageFilter.SHARPEN)
         self.value = pytesseract.image_to_string(i, config=self.config)
         self.parsed = True
 
@@ -120,12 +124,12 @@ class DDRParsedData(object):
         self.play_ex_score = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
 
         # Score info
-        self.score_marv_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
-        self.score_perfect_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
-        self.score_great_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
-        self.score_good_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
-        self.score_OK_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
-        self.score_miss_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
+        self.score_marv_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, True)
+        self.score_perfect_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, True)
+        self.score_great_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, True)
+        self.score_good_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, True)
+        self.score_OK_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, True)
+        self.score_miss_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, True)
 
         # T/D
         self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)  # Good validation target!!!
