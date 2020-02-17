@@ -105,8 +105,8 @@ class DDRParsedData(object):
         self.song_artist = DDRPartData("--psm 7", True)
 
         # Chart info
-        self.chart_play_mode = DDRPartData("--psm 7 --oem 3", True)
-        self.chart_difficulty = DDRPartData("--psm 7 --oem 3", True)
+        self.chart_play_mode = DDRPartData("--psm 8 --oem 3", True)
+        self.chart_difficulty = DDRPartData("--psm 8 --oem 3", True)
         self.chart_difficulty_number = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
 
         # Play info
