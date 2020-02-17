@@ -223,12 +223,12 @@ class DDRParsedData(object):
         # FC Calc
         if int(self.score_miss_count.value) == 0:
             if int(self.score_good_count.value) > 0:
-                self.play_full_combo = "FC"
+                self.play_full_combo = "FC "
             elif int(self.score_great_count.value) > 0:
-                self.play_full_combo = "GFC!"
+                self.play_full_combo = "GFC! "
             elif int(self.score_perfect_count.value) > 0:
-                self.play_full_combo = "PFC!!"
+                self.play_full_combo = "PFC!! "
             elif int(self.score_marv_count.value) > 0:
-                self.play_full_combo = "MFC!!!"
+                self.play_full_combo = "MFC!!! "
         else:
             self.play_full_combo = ""
