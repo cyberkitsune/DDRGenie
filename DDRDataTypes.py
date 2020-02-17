@@ -196,7 +196,7 @@ class DDRParsedData(object):
             self.play_ex_score.value = "%s* [%s]" % (str(calc_ex), ocr_ex)
 
         # Sanitize mode / diff
-        if 'VERS' in self.chart_play_mode.value:
+        if 'ERS' in self.chart_play_mode.value:
             self.chart_play_mode.value = 'VERSUS'
 
         if 'SING' in self.chart_play_mode.value:
@@ -232,3 +232,5 @@ class DDRParsedData(object):
                 self.play_full_combo = "MFC!!! "
         else:
             self.play_full_combo = ""
+
+        # Validate
