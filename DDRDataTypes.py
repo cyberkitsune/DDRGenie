@@ -3,6 +3,7 @@ import PIL
 import PIL.ImageOps
 import pytesseract
 
+
 class DDRScreenshot(object):
     # Whole image
     base_img: Image = None
@@ -135,6 +136,8 @@ class DDRParsedData(object):
             if isinstance(p, DDRPartData):
                 p.parse_from(getattr(ss, var))
 
+        self.validate()
+
     def __str__(self):
         outstr = []
         for attr in vars(self):
@@ -142,6 +145,7 @@ class DDRParsedData(object):
         return '\n'.join(outstr)
 
     def validate(self):
+        # Sometimes the dark 0, can trip it up. Since Scores < 100k are VERY unlikely we'll sanitize across just <1mil
         money_score = int(self.play_money_score.value)
         if money_score > 1000000:
-            raise Exception("Money score too large!")
+            self.play_money_score.value = str(money_score - 1000000)
