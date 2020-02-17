@@ -193,3 +193,29 @@ class DDRParsedData(object):
 
         if ocr_ex != calc_ex:
             self.play_ex_score.value = "%s* [%s]" % (str(calc_ex), ocr_ex)
+
+        # Sanitize mode / diff
+        if 'VERS' in self.chart_play_mode.value:
+            self.chart_play_mode.value = 'VERSUS'
+
+        if 'SING' in self.chart_play_mode.value:
+            self.chart_play_mode.value = 'SINGLE'
+
+        if 'DOUB' in self.chart_play_mode.value:
+            self.chart_play_mode.value = 'DOUBLES'
+
+        if 'BEGI' in self.chart_difficulty.value:
+            self.chart_difficulty.value = 'BEGINNER'
+
+        if 'BASI' in self.chart_difficulty.value:
+            self.chart_difficulty.value = 'BASIC'
+
+        if 'DIFF' in self.chart_difficulty.value:
+            self.chart_difficulty.value = 'DIFFICULT'
+
+        if 'EXP' in self.chart_difficulty.value:
+            self.chart_difficulty.value = 'EXPERT'
+
+        if 'CHA' in self.chart_difficulty.value:
+            self.chart_difficulty.value = 'CHALLENGE'
+
