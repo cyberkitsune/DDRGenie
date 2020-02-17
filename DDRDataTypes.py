@@ -103,7 +103,7 @@ class DDRPartData(object):
 class DDRParsedData(object):
 
     def __init__(self, ss):
-        self.dancer_name = DDRPartData("--psm 8", True)
+        self.dancer_name = DDRPartData("--psm 8 --oem 3", True)
 
         self.song_title = DDRPartData("--psm 7")
         self.song_artist = DDRPartData("--psm 7", True)
