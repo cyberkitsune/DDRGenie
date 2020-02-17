@@ -127,6 +127,8 @@ class DDRParsedData(object):
 
         # T/D
         self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)  # Good validation target!!!
+
+        self.letter_grade = None
         if not isinstance(ss, DDRScreenshot):
             raise Exception("Not a DDR screenshot...")
 
@@ -149,3 +151,37 @@ class DDRParsedData(object):
         money_score = int(self.play_money_score.value)
         if money_score > 1000000:
             self.play_money_score.value = str(money_score - 1000000)
+
+        # Generate letter grade (Ace Scoring)
+        if money_score >= 990000:
+            self.letter_grade = "AAA"
+        elif money_score >= 950000:
+            self.letter_grade = "AA+"
+        elif money_score >= 900000:
+            self.letter_grade = "AA"
+        elif money_score >= 890000:
+            self.letter_grade = "AA-"
+        elif money_score >= 850000:
+            self.letter_grade = "A+"
+        elif money_score >= 800000:
+            self.letter_grade = "A"
+        elif money_score >= 790000:
+            self.letter_grade = "A-"
+        elif money_score >= 750000:
+            self.letter_grade = "B+"
+        elif money_score >= 700000:
+            self.letter_grade = "B"
+        elif money_score >= 690000:
+            self.letter_grade = "B-"
+        elif money_score >= 650000:
+            self.letter_grade = "C+"
+        elif money_score >= 600000:
+            self.letter_grade = "C"
+        elif money_score >= 590000:
+            self.letter_grade = "C-"
+        elif money_score >= 550000:
+            self.letter_grade = "D+"
+        elif money_score >= 500000:
+            self.letter_grade = "D"
+        else:
+            self.letter_grade = "D? Unless you failed..."
