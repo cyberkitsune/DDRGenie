@@ -112,6 +112,7 @@ class DDRParsedData(object):
         # Play info
         # play_grade = None
         self.play_letter_grade = None
+        self.play_full_combo = ''
         # play_new_records = None
         self.play_money_score = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
         #self.play_target_diff = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=-+0123456789", True)
@@ -220,3 +221,14 @@ class DDRParsedData(object):
             self.chart_difficulty.value = 'CHALLENGE'
 
         # FC Calc
+        if int(self.score_miss_count.value) == 0:
+            if int(self.score_good_count.value) > 0:
+                self.play_full_combo = "FC"
+            elif int(self.score_great_count.value) > 0:
+                self.play_full_combo = "GFC!"
+            elif int(self.score_perfect_count.value) > 0:
+                self.play_full_combo = "PFC!!"
+            elif int(self.score_marv_count.value) > 0:
+                self.play_full_combo = "MFC!!!"
+        else:
+            self.play_full_combo = ""
