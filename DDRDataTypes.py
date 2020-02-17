@@ -237,4 +237,5 @@ class DDRParsedData(object):
         else:
             self.play_full_combo = ""
 
-        # Validate
+        # Clean pipes
+        self.dancer_name.value = self.dancer_name.value.strip('|')
