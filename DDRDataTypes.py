@@ -111,6 +111,7 @@ class DDRParsedData(object):
 
         # Play info
         # play_grade = None
+        self.play_letter_grade = None
         # play_new_records = None
         self.play_money_score = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
         #self.play_target_diff = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=-+0123456789", True)
@@ -128,7 +129,6 @@ class DDRParsedData(object):
         # T/D
         self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)  # Good validation target!!!
 
-        self.letter_grade = None
         if not isinstance(ss, DDRScreenshot):
             raise Exception("Not a DDR screenshot...")
 
@@ -154,37 +154,37 @@ class DDRParsedData(object):
 
         # Generate letter grade (Ace Scoring)
         if money_score >= 990000:
-            self.letter_grade = "AAA"
+            self.play_letter_grade = "AAA"
         elif money_score >= 950000:
-            self.letter_grade = "AA+"
+            self.play_letter_grade = "AA+"
         elif money_score >= 900000:
-            self.letter_grade = "AA"
+            self.play_letter_grade = "AA"
         elif money_score >= 890000:
-            self.letter_grade = "AA-"
+            self.play_letter_grade = "AA-"
         elif money_score >= 850000:
-            self.letter_grade = "A+"
+            self.play_letter_grade = "A+"
         elif money_score >= 800000:
-            self.letter_grade = "A"
+            self.play_letter_grade = "A"
         elif money_score >= 790000:
-            self.letter_grade = "A-"
+            self.play_letter_grade = "A-"
         elif money_score >= 750000:
-            self.letter_grade = "B+"
+            self.play_letter_grade = "B+"
         elif money_score >= 700000:
-            self.letter_grade = "B"
+            self.play_letter_grade = "B"
         elif money_score >= 690000:
-            self.letter_grade = "B-"
+            self.play_letter_grade = "B-"
         elif money_score >= 650000:
-            self.letter_grade = "C+"
+            self.play_letter_grade = "C+"
         elif money_score >= 600000:
-            self.letter_grade = "C"
+            self.play_letter_grade = "C"
         elif money_score >= 590000:
-            self.letter_grade = "C-"
+            self.play_letter_grade = "C-"
         elif money_score >= 550000:
-            self.letter_grade = "D+"
+            self.play_letter_grade = "D+"
         elif money_score >= 500000:
-            self.letter_grade = "D"
+            self.play_letter_grade = "D"
         else:
-            self.letter_grade = "D? Unless you failed..."
+            self.play_letter_grade = "D? Unless you failed..."
 
         # EXScore Correction
         ocr_ex = int(self.play_ex_score.value)
@@ -219,3 +219,4 @@ class DDRParsedData(object):
         if 'CHA' in self.chart_difficulty.value:
             self.chart_difficulty.value = 'CHALLENGE'
 
+        # FC Calc
