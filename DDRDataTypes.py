@@ -145,6 +145,7 @@ class DDRParsedData(object):
 
         self.validate()
 
+
     def __str__(self):
         outstr = []
         for attr in vars(self):
