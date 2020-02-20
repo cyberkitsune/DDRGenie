@@ -1,5 +1,5 @@
 from PIL import Image
-import DDRSongListCorrector
+from . import DDRSongListCorrector
 import PIL
 import PIL.ImageOps
 import PIL.ImageFilter
@@ -251,7 +251,7 @@ class DDRParsedData(object):
         self.dancer_name.value = self.dancer_name.value.strip('|')
 
         # Title matching!
-        slc = DDRSongListCorrector.DDRSongCorrector("a20_songlist.txt")
+        slc = DDRSongCorrector("a20_songlist.txt")
         eng_ratio, title, artist = slc.check_title(self.song_title.value)
 
         # Try and reparse...
