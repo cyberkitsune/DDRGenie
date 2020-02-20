@@ -1,5 +1,5 @@
 from PIL import Image
-from DDRDataTypes import DDRScreenshot, DDRParsedData
+from DDRGenie.DDRDataTypes import DDRScreenshot, DDRParsedData
 import sys
 
 if __name__ == "__main__":

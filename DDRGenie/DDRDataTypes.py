@@ -1,5 +1,5 @@
 from PIL import Image
-from DDRSongListCorrector import DDRSongCorrector
+from DDRGenie.DDRSongListCorrector import DDRSongCorrector
 import PIL
 import PIL.ImageOps
 import PIL.ImageFilter
