@@ -1,6 +1,6 @@
 from PIL import Image
 from DDRDataTypes import DDRScreenshot, DDRParsedData
-import sys
+import sys, DDRSongListCorrector
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -15,4 +15,3 @@ if __name__ == "__main__":
                                                       d.score_good_count, d.score_OK_count, d.score_miss_count))
     except Exception:
         pass
-
