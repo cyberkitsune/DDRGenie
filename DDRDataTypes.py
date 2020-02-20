@@ -260,7 +260,8 @@ class DDRParsedData(object):
             self.song_title.redo()
             jpn_ratio, jpn_title, jpn_artist = slc.check_title(self.song_title.value)
             if jpn_ratio < 0.30:
-                pass
+                self.song_title.value += '?'
+                self.song_artist.value += '?'
             elif jpn_ratio > eng_ratio:
                 self.song_title.value = jpn_title
                 self.song_artist.value = jpn_title
