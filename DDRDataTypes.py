@@ -145,6 +145,8 @@ class DDRParsedData(object):
         # T/D
         self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)  # Good validation target!!!
 
+        self.title_conf = -1
+
         if not isinstance(ss, DDRScreenshot):
             raise Exception("Not a DDR screenshot...")
 
@@ -258,19 +260,23 @@ class DDRParsedData(object):
         eng_ratio, title, artist = slc.check_title(self.song_title.value)
 
         # Try and reparse...
-        if eng_ratio > 0.40:
+        if eng_ratio < 0.40:
             self.song_title.lang = 'jpn'
             self.song_title.redo()
             jpn_ratio, jpn_title, jpn_artist = slc.check_title(self.song_title.value)
             if jpn_ratio < 0.30:
                 self.song_title.value += '?'
                 self.song_artist.value += '?'
+                self.title_conf = -1
             elif jpn_ratio > eng_ratio:
                 self.song_title.value = jpn_title
                 self.song_artist.value = jpn_title
+                self.title_conf = jpn_ratio
             else:
                 self.song_title.value = title
                 self.song_artist.value = artist
+                self.title_conf = eng_ratio
         else:
             self.song_title.value = title
             self.song_artist.value = artist
+            self.title_conf = eng_ratio

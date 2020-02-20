@@ -10,7 +10,7 @@ if __name__ == "__main__":
     i = DDRScreenshot(sshot)
     try:
         d = DDRParsedData(i)
-        print("%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % (d.dancer_name, d.song_title, d.song_artist, d.play_letter_grade, d.play_money_score, d.play_max_combo,
+        print("%s|%s (C: %f)|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % (d.dancer_name, d.song_title, d.title_conf, d.song_artist, d.play_letter_grade, d.play_money_score, d.play_max_combo,
                                                       d.play_ex_score, d.score_marv_count, d.score_perfect_count, d.score_great_count,
                                                       d.score_good_count, d.score_OK_count, d.score_miss_count))
     except Exception:
