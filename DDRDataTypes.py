@@ -1,4 +1,5 @@
 from PIL import Image
+from DDRSongListCorrector import DDRSongCorrector
 import PIL
 import PIL.ImageOps
 import PIL.ImageFilter
@@ -88,14 +89,20 @@ class DDRPartData(object):
         self.invert = invert
         self.sharpen = sharpen
         self.lang = lang
+        self.i = None
 
     def parse_from(self, i):
+        self.i = i
         if self.invert:
             i = PIL.ImageOps.invert(i)
         if self.sharpen:
             i = i.filter(PIL.ImageFilter.SHARPEN)
         self.value = pytesseract.image_to_string(i, lang=self.lang, config=self.config)
         self.parsed = True
+
+    def redo(self):
+        if self.i is not None:
+            self.parse_from(self.i)
 
     def __str__(self):
         return self.value
@@ -106,8 +113,8 @@ class DDRParsedData(object):
     def __init__(self, ss):
         self.dancer_name = DDRPartData("--psm 8 --oem 3", True, lang="eng+jpn")
 
-        self.song_title = DDRPartData("--psm 7", False, lang="eng+jpn")
-        self.song_artist = DDRPartData("--psm 7", True, lang="eng+jpn")
+        self.song_title = DDRPartData("--psm 7", False, lang="jpn")
+        self.song_artist = DDRPartData("--psm 7", True, lang="jpn")
 
         # Chart info
         self.chart_play_mode = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
@@ -242,3 +249,22 @@ class DDRParsedData(object):
 
         # Clean pipes
         self.dancer_name.value = self.dancer_name.value.strip('|')
+
+        # Title matching!
+        slc = DDRSongCorrector("a20_songlist.txt")
+        eng_ratio, title, artist = slc.check_title(self.song_title.value)
+
+        # Try and reparse...
+        if eng_ratio > 0.40:
+            self.song_title.lang = 'jpn'
+            self.song_title.redo()
+            jpn_ratio, jpn_title, jpn_artist = slc.check_title(self.song_title.value)
+            if jpn_ratio > eng_ratio:
+                self.song_title.value = jpn_title
+                self.song_artist.value = jpn_title
+            else:
+                self.song_title.value = title
+                self.song_artist.value = artist
+        else:
+            self.song_title.value = title
+            self.song_artist.value = artist
