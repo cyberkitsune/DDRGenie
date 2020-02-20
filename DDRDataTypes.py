@@ -256,6 +256,9 @@ class DDRParsedData(object):
         self.dancer_name.value = self.dancer_name.value.strip('|')
 
         # Title matching!
+        if self.song_title.value == '':
+            self.song_title.value = "Unknown"
+
         if self.debug:
             echo = True
         else:
