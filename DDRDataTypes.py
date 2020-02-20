@@ -1,5 +1,8 @@
 from PIL import Image
-from .DDRSongListCorrector import DDRSongCorrector
+try:
+    from .DDRSongListCorrector import DDRSongCorrector
+except ImportError:
+    from DDRSongListCorrector import DDRSongCorrector
 import PIL
 import PIL.ImageOps
 import PIL.ImageFilter
