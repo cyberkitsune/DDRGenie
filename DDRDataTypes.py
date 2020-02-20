@@ -83,17 +83,18 @@ class DDRPartData(object):
     config = None
     parsed = False
 
-    def __init__(self, config="", invert=False, sharpen=False):
+    def __init__(self, config="", invert=False, sharpen=False, lang='eng'):
         self.config = config
         self.invert = invert
         self.sharpen = sharpen
+        self.lang = lang
 
     def parse_from(self, i):
         if self.invert:
             i = PIL.ImageOps.invert(i)
         if self.sharpen:
             i = i.filter(PIL.ImageFilter.SHARPEN)
-        self.value = pytesseract.image_to_string(i, config=self.config)
+        self.value = pytesseract.image_to_string(i, lang=self.lang, config=self.config)
         self.parsed = True
 
     def __str__(self):
@@ -103,10 +104,10 @@ class DDRPartData(object):
 class DDRParsedData(object):
 
     def __init__(self, ss):
-        self.dancer_name = DDRPartData("--psm 8 --oem 3", True)
+        self.dancer_name = DDRPartData("--psm 8 --oem 3", True, lang="eng+jpn")
 
-        self.song_title = DDRPartData("--psm 7")
-        self.song_artist = DDRPartData("--psm 7", True)
+        self.song_title = DDRPartData("--psm 7", False, lang="eng+jpn")
+        self.song_artist = DDRPartData("--psm 7", True, lang="eng+jpn")
 
         # Chart info
         self.chart_play_mode = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
