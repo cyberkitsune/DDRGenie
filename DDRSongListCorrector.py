@@ -17,7 +17,9 @@ class DDRSongCorrector(object):
             print(song)
 
     def check_title(self, title):
-        winner = (0, None)
+        if self.echo:
+            print("Checking", title, "!")
+        winner = (0, ('', ''))
         for song in self.songs:
             s_1 = title
             s_2 = song[0]

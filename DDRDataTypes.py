@@ -113,11 +113,12 @@ class DDRPartData(object):
 
 class DDRParsedData(object):
 
-    def __init__(self, ss):
+    def __init__(self, ss, debug=False):
+        self.debug = debug
         self.dancer_name = DDRPartData("--psm 8 --oem 3", True, lang="eng+jpn")
 
-        self.song_title = DDRPartData("--psm 7", False, lang="jpn")
-        self.song_artist = DDRPartData("--psm 7", True, lang="jpn")
+        self.song_title = DDRPartData("--psm 7", False, lang="eng")
+        self.song_artist = DDRPartData("--psm 7", True, lang="eng")
 
         # Chart info
         self.chart_play_mode = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
@@ -157,7 +158,6 @@ class DDRParsedData(object):
                 p.parse_from(getattr(ss, var))
 
         self.validate()
-
 
     def __str__(self):
         outstr = []
@@ -256,7 +256,11 @@ class DDRParsedData(object):
         self.dancer_name.value = self.dancer_name.value.strip('|')
 
         # Title matching!
-        slc = DDRSongCorrector("a20_songlist.txt")
+        if self.debug:
+            echo = True
+        else:
+            echo = False
+        slc = DDRSongCorrector("a20_songlist.txt", echo=echo)
         eng_ratio, title, artist = slc.check_title(self.song_title.value)
 
         # Try and reparse...
