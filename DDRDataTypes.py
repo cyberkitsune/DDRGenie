@@ -106,8 +106,8 @@ class DDRParsedData(object):
     def __init__(self, ss):
         self.dancer_name = DDRPartData("--psm 8 --oem 3", True, lang="eng+jpn")
 
-        self.song_title = DDRPartData("--psm 7", False, lang="jpn")
-        self.song_artist = DDRPartData("--psm 7", True, lang="jpn")
+        self.song_title = DDRPartData("--psm 7", False, lang="eng+jpn")
+        self.song_artist = DDRPartData("--psm 7", True, lang="eng+jpn")
 
         # Chart info
         self.chart_play_mode = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
