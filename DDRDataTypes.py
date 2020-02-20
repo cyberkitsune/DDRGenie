@@ -207,7 +207,10 @@ class DDRParsedData(object):
             self.play_letter_grade = "D? Unless you failed..."
 
         # EXScore Correction
-        ocr_ex = int(self.play_ex_score.value)
+        try:
+            ocr_ex = int(self.play_ex_score.value)
+        except:
+            ocr_ex = -1
         calc_ex = ((int(self.score_marv_count.value) + int(self.score_OK_count.value)) * 3) + \
                   (int(self.score_perfect_count.value) * 2) + int(self.score_great_count.value)
 
