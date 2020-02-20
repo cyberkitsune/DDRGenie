@@ -8,7 +8,7 @@ class DDRSongCorrector(object):
         self.echo = echo
         with open(songfile, 'r') as f:
             for line in f.readlines():
-                self.songs.append(tuple(line.split("/")))
+                self.songs.append(tuple(line.strip('\n').split("/")))
         if self.echo:
             print("[SLC] Loaded %i songs!" % len(self.songs))
 
