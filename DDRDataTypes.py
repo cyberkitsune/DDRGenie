@@ -86,7 +86,7 @@ class DDRScreenshot(object):
 
         self.speed_mod = self.base_img.crop((387*mult, 258*mult, 403*mult, 274*mult))
 
-        self.date_stamp = self.base_img.crop((420*mult, 373*mult, 542*mult, 400*mult))
+        self.date_stamp = self.base_img.crop((424*mult, 378*mult, 572*mult, 394*mult))
 
     def debug_show(self):
         for attr in vars(self):
@@ -165,7 +165,7 @@ class DDRParsedData(object):
         self.speed_mod = DDRPartData("--psm 7 --oem 3 -c tessedit_char_whitelist=123456789.xX", True, True)
 
         # T/D
-        self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789.:", True)  # Good validation target!!!
+        self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)  # Good validation target!!!
 
         self.title_conf = -1
 
@@ -278,6 +278,17 @@ class DDRParsedData(object):
 
         # Clean pipes
         self.dancer_name.value = self.dancer_name.value.strip('|')
+
+        # Time formatting
+        if len(self.date_stamp.value) != 12:
+            self.date_stamp.value = "Unknown"
+        else:
+            year = ''.join(self.date_stamp.value[0:3])
+            month = ''.join(self.date_stamp.value[4:5])
+            day = ''.join(self.date_stamp.value[6:7])
+            hh = ''.join(self.date_stamp.value[8:9])
+            mm = ''.join(self.date_stamp.value[10:11])
+            self.date_stamp.value = "%s.%s.%s %s:%s" % (year, month, day, hh, mm)
 
         # Title matching!
         if self.song_title.value == '':
