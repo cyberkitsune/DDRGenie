@@ -165,7 +165,7 @@ class DDRParsedData(object):
         self.speed_mod = DDRPartData("--psm 7 --oem 3 -c tessedit_char_whitelist=123456789.xX", True, True)
 
         # T/D
-        self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)  # Good validation target!!!
+        self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789.:", True)  # Good validation target!!!
 
         self.title_conf = -1
 
