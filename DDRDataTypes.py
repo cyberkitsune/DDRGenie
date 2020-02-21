@@ -7,6 +7,7 @@ import PIL
 import PIL.ImageOps
 import PIL.ImageFilter
 import pytesseract
+import os
 
 
 class DDRScreenshot(object):
@@ -281,7 +282,8 @@ class DDRParsedData(object):
             echo = True
         else:
             echo = False
-        slc = DDRSongCorrector("genie_assets/a20_songlist.txt", echo=echo)
+        folder = os.path.dirname(__file__)
+        slc = DDRSongCorrector("%s/genie_assets/a20_songlist.txt" % folder, echo=echo)
         eng_ratio, title, artist = slc.check_title(self.song_title.value)
 
         # Try and reparse...
