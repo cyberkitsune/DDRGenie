@@ -281,7 +281,7 @@ class DDRParsedData(object):
             echo = True
         else:
             echo = False
-        slc = DDRSongCorrector("a20_songlist.txt", echo=echo)
+        slc = DDRSongCorrector("genie_assets/a20_songlist.txt", echo=echo)
         eng_ratio, title, artist = slc.check_title(self.song_title.value)
 
         # Try and reparse...
