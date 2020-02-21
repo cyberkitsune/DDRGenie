@@ -64,7 +64,7 @@ class DDRScreenshot(object):
 
         self.chart_play_mode = self.base_img.crop((152*self.size_multiplier, 93*self.size_multiplier, 230*self.size_multiplier, 115*self.size_multiplier))
         self.chart_difficulty = self.base_img.crop((150*self.size_multiplier, 114*self.size_multiplier, 225*self.size_multiplier, 130*self.size_multiplier))
-        self.chart_difficulty_number = self.base_img.crop((237*self.size_multiplier, 86*self.size_multiplier, 288*self.size_multiplier, 136*self.size_multiplier))
+        self.chart_difficulty_number = self.base_img.crop((228*self.size_multiplier, 94*self.size_multiplier, 299*self.size_multiplier, 131*self.size_multiplier))
 
         self.play_grade = self.base_img.crop((70*self.size_multiplier, 165*self.size_multiplier, 189*self.size_multiplier, 242*self.size_multiplier))
         self.play_new_records = self.base_img.crop((220*self.size_multiplier, 136*self.size_multiplier, 357*self.size_multiplier, 161*self.size_multiplier))
