@@ -280,6 +280,7 @@ class DDRParsedData(object):
         self.dancer_name.value = self.dancer_name.value.strip('|')
 
         # Time formatting
+        self.date_stamp.value = self.date_stamp.value.replace(" ", "")
         if len(self.date_stamp.value) != 12:
             self.date_stamp.value = "Unknown"
         else:
