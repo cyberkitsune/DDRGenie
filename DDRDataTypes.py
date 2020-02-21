@@ -162,7 +162,7 @@ class DDRParsedData(object):
         self.score_miss_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, True)
 
         # Speedmod is not accurate yet...
-        self.speed_mod = DDRPartData("--psm 7 --oem 3 -c tessedit_char_whitelist=123456789.x", True)
+        self.speed_mod = DDRPartData("--psm 7 --oem 3 -c tessedit_char_whitelist=123456789.xX", True, True)
 
         # T/D
         self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)  # Good validation target!!!
@@ -246,7 +246,7 @@ class DDRParsedData(object):
             self.chart_play_mode.value = 'SINGLE'
 
         if 'DOUB' in self.chart_play_mode.value:
-            self.chart_play_mode.value = 'DOUBLES'
+            self.chart_play_mode.value = 'DOUBLE'
 
         if 'BEGI' in self.chart_difficulty.value:
             self.chart_difficulty.value = 'BEGINNER'
