@@ -225,7 +225,7 @@ class DDRParsedData(object):
         elif money_score >= 500000:
             self.play_letter_grade = "D"
         else:
-            self.play_letter_grade = "D? Unless you failed..."
+            self.play_letter_grade = "D / E?"
 
         # EXScore Correction
         try:
