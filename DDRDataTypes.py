@@ -45,6 +45,8 @@ class DDRScreenshot(object):
     score_OK_count = None
     score_miss_count = None
 
+    speed_mod = None
+
     # T/D
     date_stamp = None   # Good validation target!!!
 
@@ -57,30 +59,33 @@ class DDRScreenshot(object):
         self.crop_parts()
 
     def crop_parts(self):
-        self.dancer_name = self.base_img.crop((440*self.size_multiplier, 6*self.size_multiplier, 580*self.size_multiplier, 37*self.size_multiplier))
+        mult = self.size_multiplier
+        self.dancer_name = self.base_img.crop((440*mult, 6*mult, 580*mult, 37*mult))
 
-        self.song_title = self.base_img.crop((148*self.size_multiplier, 33*self.size_multiplier, 577*self.size_multiplier, 58*self.size_multiplier))
-        self.song_artist = self.base_img.crop((150*self.size_multiplier, 64*self.size_multiplier, 578*self.size_multiplier, 80*self.size_multiplier))
+        self.song_title = self.base_img.crop((148*mult, 33*mult, 577*mult, 58*mult))
+        self.song_artist = self.base_img.crop((150*mult, 64*mult, 578*mult, 80*mult))
 
-        self.chart_play_mode = self.base_img.crop((152*self.size_multiplier, 93*self.size_multiplier, 230*self.size_multiplier, 115*self.size_multiplier))
-        self.chart_difficulty = self.base_img.crop((150*self.size_multiplier, 114*self.size_multiplier, 225*self.size_multiplier, 130*self.size_multiplier))
-        self.chart_difficulty_number = self.base_img.crop((228*self.size_multiplier, 94*self.size_multiplier, 299*self.size_multiplier, 131*self.size_multiplier))
+        self.chart_play_mode = self.base_img.crop((152*mult, 93*mult, 230*mult, 115*mult))
+        self.chart_difficulty = self.base_img.crop((150*mult, 114*mult, 225*mult, 130*mult))
+        self.chart_difficulty_number = self.base_img.crop((228*mult, 94*mult, 299*mult, 131*mult))
 
-        self.play_grade = self.base_img.crop((70*self.size_multiplier, 165*self.size_multiplier, 189*self.size_multiplier, 242*self.size_multiplier))
-        self.play_new_records = self.base_img.crop((220*self.size_multiplier, 136*self.size_multiplier, 357*self.size_multiplier, 161*self.size_multiplier))
-        self.play_money_score = self.base_img.crop((218*self.size_multiplier, 164*self.size_multiplier, 365*self.size_multiplier, 192*self.size_multiplier))
-        self.play_target_diff = self.base_img.crop((251*self.size_multiplier, 191*self.size_multiplier, 386*self.size_multiplier, 207*self.size_multiplier))
-        self.play_max_combo = self.base_img.crop((322*self.size_multiplier, 208*self.size_multiplier, 372*self.size_multiplier, 230*self.size_multiplier))
-        self.play_ex_score = self.base_img.crop((310*self.size_multiplier, 222*self.size_multiplier, 383*self.size_multiplier, 258*self.size_multiplier))
+        self.play_grade = self.base_img.crop((70*mult, 165*mult, 189*mult, 242*mult))
+        self.play_new_records = self.base_img.crop((220*mult, 136*mult, 357*mult, 161*mult))
+        self.play_money_score = self.base_img.crop((218*mult, 164*mult, 365*mult, 192*mult))
+        self.play_target_diff = self.base_img.crop((251*mult, 191*mult, 386*mult, 207*mult))
+        self.play_max_combo = self.base_img.crop((322*mult, 208*mult, 372*mult, 230*mult))
+        self.play_ex_score = self.base_img.crop((310*mult, 222*mult, 383*mult, 258*mult))
 
-        self.score_marv_count = self.base_img.crop((152*self.size_multiplier, 266*self.size_multiplier, 206*self.size_multiplier, 280*self.size_multiplier))
-        self.score_perfect_count = self.base_img.crop((152*self.size_multiplier, 282*self.size_multiplier, 206*self.size_multiplier, 305*self.size_multiplier))
-        self.score_great_count = self.base_img.crop((152*self.size_multiplier, 304*self.size_multiplier, 206*self.size_multiplier, 326*self.size_multiplier))
-        self.score_good_count = self.base_img.crop((152*self.size_multiplier, 323*self.size_multiplier, 206*self.size_multiplier, 343*self.size_multiplier))
-        self.score_OK_count = self.base_img.crop((152*self.size_multiplier, 343*self.size_multiplier, 206*self.size_multiplier, 364*self.size_multiplier))
-        self.score_miss_count = self.base_img.crop((152*self.size_multiplier, 364*self.size_multiplier, 206*self.size_multiplier, 382*self.size_multiplier))
+        self.score_marv_count = self.base_img.crop((152*mult, 266*mult, 206*mult, 280*mult))
+        self.score_perfect_count = self.base_img.crop((152*mult, 282*mult, 206*mult, 305*mult))
+        self.score_great_count = self.base_img.crop((152*mult, 304*mult, 206*mult, 326*mult))
+        self.score_good_count = self.base_img.crop((152*mult, 323*mult, 206*mult, 343*mult))
+        self.score_OK_count = self.base_img.crop((152*mult, 343*mult, 206*mult, 364*mult))
+        self.score_miss_count = self.base_img.crop((152*mult, 364*mult, 206*mult, 382*mult))
 
-        self.date_stamp = self.base_img.crop((420*self.size_multiplier, 373*self.size_multiplier, 542*self.size_multiplier, 400*self.size_multiplier))
+        self.speed_mod = self.base_img.crop((387*mult, 258*mult, 403*mult, 274*mult))
+
+        self.date_stamp = self.base_img.crop((420*mult, 373*mult, 542*mult, 400*mult))
 
     def debug_show(self):
         for attr in vars(self):
@@ -149,6 +154,9 @@ class DDRParsedData(object):
         self.score_good_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, True)
         self.score_OK_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, True)
         self.score_miss_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, True)
+
+        # Speedmod is not accurate yet...
+        self.speed_mod = DDRPartData("--psm 7 --oem 3 -c tessedit_char_whitelist=123456789.x", True)
 
         # T/D
         self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)  # Good validation target!!!
