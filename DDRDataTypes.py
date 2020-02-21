@@ -77,12 +77,12 @@ class DDRScreenshot(object):
         self.play_max_combo = self.base_img.crop((322*mult, 208*mult, 372*mult, 230*mult))
         self.play_ex_score = self.base_img.crop((310*mult, 222*mult, 383*mult, 258*mult))
 
-        self.score_marv_count = self.base_img.crop((152*mult, 266*mult, 206*mult, 280*mult))
-        self.score_perfect_count = self.base_img.crop((152*mult, 282*mult, 206*mult, 305*mult))
-        self.score_great_count = self.base_img.crop((152*mult, 304*mult, 206*mult, 326*mult))
-        self.score_good_count = self.base_img.crop((152*mult, 323*mult, 206*mult, 343*mult))
-        self.score_OK_count = self.base_img.crop((152*mult, 343*mult, 206*mult, 364*mult))
-        self.score_miss_count = self.base_img.crop((152*mult, 364*mult, 206*mult, 382*mult))
+        self.score_marv_count = self.base_img.crop((147*mult, 264*mult, 215*mult, 281*mult))
+        self.score_perfect_count = self.base_img.crop((147*mult, 284*mult, 215*mult, 301*mult))
+        self.score_great_count = self.base_img.crop((147*mult, 304*mult, 215*mult, 321*mult))
+        self.score_good_count = self.base_img.crop((147*mult, 324*mult, 215*mult, 341*mult))
+        self.score_OK_count = self.base_img.crop((147*mult, 344*mult, 215*mult, 361*mult))
+        self.score_miss_count = self.base_img.crop((147*mult, 364*mult, 215*mult, 381*mult))
 
         self.speed_mod = self.base_img.crop((387*mult, 258*mult, 403*mult, 274*mult))
 
@@ -92,6 +92,7 @@ class DDRScreenshot(object):
         for attr in vars(self):
             i = getattr(self, attr)
             if isinstance(i, PIL.Image.Image):
+                print("Showing %s" % attr)
                 i.show()
 
 
@@ -110,15 +111,19 @@ class DDRPartData(object):
     def parse_from(self, i):
         self.i = i
         if self.invert:
-            i = PIL.ImageOps.invert(i)
+            self.i = PIL.ImageOps.invert(self.i)
         if self.sharpen:
-            i = i.filter(PIL.ImageFilter.SHARPEN)
-        self.value = pytesseract.image_to_string(i, lang=self.lang, config=self.config)
+            self.i = self.i.filter(PIL.ImageFilter.SHARPEN)
+        self.value = pytesseract.image_to_string(self.i, lang=self.lang, config=self.config)
         self.parsed = True
 
     def redo(self):
         if self.i is not None:
             self.parse_from(self.i)
+
+    def debug_show(self):
+        if self.i is not None:
+            self.i.show()
 
     def __str__(self):
         return self.value
