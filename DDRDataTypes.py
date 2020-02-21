@@ -283,11 +283,11 @@ class DDRParsedData(object):
         if len(self.date_stamp.value) != 12:
             self.date_stamp.value = "Unknown"
         else:
-            year = ''.join(self.date_stamp.value[0:3])
-            month = ''.join(self.date_stamp.value[4:5])
-            day = ''.join(self.date_stamp.value[6:7])
-            hh = ''.join(self.date_stamp.value[8:9])
-            mm = ''.join(self.date_stamp.value[10:11])
+            year = ''.join(self.date_stamp.value[0:4])
+            month = ''.join(self.date_stamp.value[4:6])
+            day = ''.join(self.date_stamp.value[6:8])
+            hh = ''.join(self.date_stamp.value[8:10])
+            mm = ''.join(self.date_stamp.value[10:12])
             self.date_stamp.value = "%s.%s.%s %s:%s" % (year, month, day, hh, mm)
 
         # Title matching!
