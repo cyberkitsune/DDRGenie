@@ -28,9 +28,9 @@ class DDRSongCorrector(object):
                 winner = (ratio, song)
 
         if self.echo:
-            print("%s - %s won at %f" % (winner[1][0], winner[1][1], winner[0]))
+            print("%s - %s won at %f" % (winner[1][0].rstrip(), winner[1][1].rstrip(), winner[0]))
 
-        return winner[0], winner[1][0], winner[1][1]
+        return winner[0], winner[1][0].rstrip(), winner[1][1].rstrip()
 
     def dump_ratios(self, title):
         ratios = []
