@@ -21,3 +21,7 @@ WIP
 
 ## Licence
 MIT? MIT.
+
+## Disclaimer
+
+This has nothing to do with Konami, and I'm not endorsed or assoicated by them in any way.
