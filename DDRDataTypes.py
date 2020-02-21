@@ -74,8 +74,8 @@ class DDRScreenshot(object):
         self.play_new_records = self.base_img.crop((220*mult, 136*mult, 357*mult, 161*mult))
         self.play_money_score = self.base_img.crop((218*mult, 164*mult, 365*mult, 192*mult))
         self.play_target_diff = self.base_img.crop((251*mult, 191*mult, 386*mult, 207*mult))
-        self.play_max_combo = self.base_img.crop((322*mult, 208*mult, 372*mult, 230*mult))
-        self.play_ex_score = self.base_img.crop((310*mult, 222*mult, 383*mult, 258*mult))
+        self.play_max_combo = self.base_img.crop((316*mult, 207*mult, 379*mult, 225*mult))
+        self.play_ex_score = self.base_img.crop((315*mult, 227*mult, 378*mult, 245*mult))
 
         self.score_marv_count = self.base_img.crop((147*mult, 264*mult, 215*mult, 281*mult))
         self.score_perfect_count = self.base_img.crop((147*mult, 284*mult, 215*mult, 301*mult))
