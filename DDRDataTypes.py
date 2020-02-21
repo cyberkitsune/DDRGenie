@@ -48,38 +48,45 @@ class DDRScreenshot(object):
     # T/D
     date_stamp = None   # Good validation target!!!
 
-    def __init__(self, base_image):
-        if not isinstance(base_image, PIL.JpegImagePlugin.JpegImageFile):
-            raise Exception("base_image is not an image type!")
+    def __init__(self, base_image, size_multiplier=1):
 
+        if not isinstance(base_image, PIL.Image.Image):
+            raise Exception("base_image is not an image type!")
+        self.size_multiplier = size_multiplier
         self.base_img = base_image
         self.crop_parts()
 
     def crop_parts(self):
-        self.dancer_name = self.base_img.crop((440, 6, 580, 37))
+        self.dancer_name = self.base_img.crop((440*self.size_multiplier, 6*self.size_multiplier, 580*self.size_multiplier, 37*self.size_multiplier))
 
-        self.song_title = self.base_img.crop((148, 33, 577, 58))
-        self.song_artist = self.base_img.crop((150, 64, 578, 80))
+        self.song_title = self.base_img.crop((148*self.size_multiplier, 33*self.size_multiplier, 577*self.size_multiplier, 58*self.size_multiplier))
+        self.song_artist = self.base_img.crop((150*self.size_multiplier, 64*self.size_multiplier, 578*self.size_multiplier, 80*self.size_multiplier))
 
-        self.chart_play_mode = self.base_img.crop((152, 93, 230, 115))
-        self.chart_difficulty = self.base_img.crop((150, 114, 225, 130))
-        self.chart_difficulty_number = self.base_img.crop((237, 86, 288, 136))
+        self.chart_play_mode = self.base_img.crop((152*self.size_multiplier, 93*self.size_multiplier, 230*self.size_multiplier, 115*self.size_multiplier))
+        self.chart_difficulty = self.base_img.crop((150*self.size_multiplier, 114*self.size_multiplier, 225*self.size_multiplier, 130*self.size_multiplier))
+        self.chart_difficulty_number = self.base_img.crop((237*self.size_multiplier, 86*self.size_multiplier, 288*self.size_multiplier, 136*self.size_multiplier))
 
-        self.play_grade = self.base_img.crop((70, 165, 189, 242))
-        self.play_new_records = self.base_img.crop((220, 136, 357, 161))
-        self.play_money_score = self.base_img.crop((218, 164, 365, 192))
-        self.play_target_diff = self.base_img.crop((251, 191, 386, 207))
-        self.play_max_combo = self.base_img.crop((322, 208, 372, 230))
-        self.play_ex_score = self.base_img.crop((310, 222, 383, 258))
+        self.play_grade = self.base_img.crop((70*self.size_multiplier, 165*self.size_multiplier, 189*self.size_multiplier, 242*self.size_multiplier))
+        self.play_new_records = self.base_img.crop((220*self.size_multiplier, 136*self.size_multiplier, 357*self.size_multiplier, 161*self.size_multiplier))
+        self.play_money_score = self.base_img.crop((218*self.size_multiplier, 164*self.size_multiplier, 365*self.size_multiplier, 192*self.size_multiplier))
+        self.play_target_diff = self.base_img.crop((251*self.size_multiplier, 191*self.size_multiplier, 386*self.size_multiplier, 207*self.size_multiplier))
+        self.play_max_combo = self.base_img.crop((322*self.size_multiplier, 208*self.size_multiplier, 372*self.size_multiplier, 230*self.size_multiplier))
+        self.play_ex_score = self.base_img.crop((310*self.size_multiplier, 222*self.size_multiplier, 383*self.size_multiplier, 258*self.size_multiplier))
 
-        self.score_marv_count = self.base_img.crop((152, 266, 206, 280))
-        self.score_perfect_count = self.base_img.crop((152, 282, 206, 305))
-        self.score_great_count = self.base_img.crop((152, 304, 206, 326))
-        self.score_good_count = self.base_img.crop((152, 323, 206, 343))
-        self.score_OK_count = self.base_img.crop((152, 343, 206, 364))
-        self.score_miss_count = self.base_img.crop((152, 364, 206, 382))
+        self.score_marv_count = self.base_img.crop((152*self.size_multiplier, 266*self.size_multiplier, 206*self.size_multiplier, 280*self.size_multiplier))
+        self.score_perfect_count = self.base_img.crop((152*self.size_multiplier, 282*self.size_multiplier, 206*self.size_multiplier, 305*self.size_multiplier))
+        self.score_great_count = self.base_img.crop((152*self.size_multiplier, 304*self.size_multiplier, 206*self.size_multiplier, 326*self.size_multiplier))
+        self.score_good_count = self.base_img.crop((152*self.size_multiplier, 323*self.size_multiplier, 206*self.size_multiplier, 343*self.size_multiplier))
+        self.score_OK_count = self.base_img.crop((152*self.size_multiplier, 343*self.size_multiplier, 206*self.size_multiplier, 364*self.size_multiplier))
+        self.score_miss_count = self.base_img.crop((152*self.size_multiplier, 364*self.size_multiplier, 206*self.size_multiplier, 382*self.size_multiplier))
 
-        self.date_stamp = self.base_img.crop((420, 373, 542, 400))
+        self.date_stamp = self.base_img.crop((420*self.size_multiplier, 373*self.size_multiplier, 542*self.size_multiplier, 400*self.size_multiplier))
+
+    def debug_show(self):
+        for attr in vars(self):
+            i = getattr(self, attr)
+            if isinstance(i, PIL.Image.Image):
+                i.show()
 
 
 class DDRPartData(object):
@@ -117,8 +124,8 @@ class DDRParsedData(object):
         self.debug = debug
         self.dancer_name = DDRPartData("--psm 8 --oem 3", True, lang="eng+jpn")
 
-        self.song_title = DDRPartData("--psm 7", False, lang="eng")
-        self.song_artist = DDRPartData("--psm 7", True, lang="eng")
+        self.song_title = DDRPartData("--psm 7", False, lang="eng+jpn")
+        self.song_artist = DDRPartData("--psm 7", True, lang="eng+jpn")
 
         # Chart info
         self.chart_play_mode = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
@@ -270,7 +277,7 @@ class DDRParsedData(object):
         eng_ratio, title, artist = slc.check_title(self.song_title.value)
 
         # Try and reparse...
-        if eng_ratio < 0.44:
+        if eng_ratio < 0.40:
             self.song_title.lang = 'jpn'
             self.song_title.redo()
             self.song_artist.lang = 'jpn'
