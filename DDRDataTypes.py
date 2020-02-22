@@ -293,8 +293,8 @@ class DDRParsedData(object):
             hh = ''.join(self.date_stamp.value[8:10])
             mm = ''.join(self.date_stamp.value[10:12])
             self.date_stamp.value = "%s.%s.%s %s:%s" % (year, month, day, hh, mm)
-            self.date_time = datetime.datetime(int(year), int(month), int(day), int(hh), int(mm), tzinfo=datetime.timezone(datetime.timedelta(hours=9)))
-            self.date_time = self.date_time.astimezone(datetime.timezone.utc)
+            self.date_time = datetime.datetime(int(year), int(month), int(day), int(hh), int(mm))
+            self.date_time = self.date_time - datetime.timedelta(hours=9)
 
         # Title matching!
         if self.song_title.value == '':
