@@ -8,6 +8,7 @@ import PIL.ImageOps
 import PIL.ImageFilter
 import pytesseract
 import os
+import datetime
 
 
 class DDRScreenshot(object):
@@ -169,6 +170,8 @@ class DDRParsedData(object):
 
         self.title_conf = -1
 
+        self.date_time = None
+
         if not isinstance(ss, DDRScreenshot):
             raise Exception("Not a DDR screenshot...")
 
@@ -290,6 +293,8 @@ class DDRParsedData(object):
             hh = ''.join(self.date_stamp.value[8:10])
             mm = ''.join(self.date_stamp.value[10:12])
             self.date_stamp.value = "%s.%s.%s %s:%s" % (year, month, day, hh, mm)
+            self.date_time = datetime.datetime(int(year), int(month), int(day), int(hh), int(mm), tzinfo=datetime.timezone(datetime.timedelta(hours=9)))
+            self.date_time = self.date_time.astimezone(datetime.timezone.utc)
 
         # Title matching!
         if self.song_title.value == '':
