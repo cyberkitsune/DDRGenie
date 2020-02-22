@@ -172,6 +172,8 @@ class DDRParsedData(object):
 
         self.date_time = None
 
+        self.bad_judge = False
+
         if not isinstance(ss, DDRScreenshot):
             raise Exception("Not a DDR screenshot...")
 
@@ -237,14 +239,13 @@ class DDRParsedData(object):
             ocr_ex = -1
 
         # Judgement compromised?
-        bad_judge = False
         for attr in vars(self):
             if 'score_' in attr:
                 j = getattr(self, attr)
                 if len(j.value) > 4:
-                    bad_judge = True
+                    self.bad_judge = True
 
-        if not bad_judge:
+        if not self.bad_judge:
             calc_ex = ((int(self.score_marv_count.value) + int(self.score_OK_count.value)) * 3) + \
                       (int(self.score_perfect_count.value) * 2) + int(self.score_great_count.value)
         else:
