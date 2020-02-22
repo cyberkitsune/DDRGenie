@@ -285,7 +285,7 @@ class DDRParsedData(object):
         # Time formatting
         self.date_stamp.value = self.date_stamp.value.replace(" ", "")
         if len(self.date_stamp.value) != 12:
-            self.date_stamp.value = "Unknown"
+            self.date_stamp.value = "Unknown (Parsed: %s)" % self.date_stamp.value
         else:
             year = ''.join(self.date_stamp.value[0:4])
             month = ''.join(self.date_stamp.value[4:6])
