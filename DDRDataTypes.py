@@ -194,7 +194,7 @@ class DDRParsedData(object):
     def validate(self):
         # Sometimes the dark 0, can trip it up. Since Scores < 100k are VERY unlikely we'll sanitize across just <1mil
         money_score = int(self.play_money_score.value.strip())
-        if money_score > 1000000:
+        while money_score > 1000000:
             self.play_money_score.value = str(money_score - 1000000)
             money_score = money_score - 1000000
 
