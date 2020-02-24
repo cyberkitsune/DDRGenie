@@ -334,7 +334,7 @@ class DDRParsedData(object):
                     self.title_conf = eng_ratio
             elif jpn_ratio > eng_ratio:
                 self.song_title.value = jpn_title
-                self.song_artist.value = jpn_title
+                self.song_artist.value = jpn_artist
                 self.title_conf = jpn_ratio
             else:
                 self.song_title.value = title
