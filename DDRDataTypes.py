@@ -309,9 +309,6 @@ class DDRParsedData(object):
             self.date_time = datetime.datetime(int(year), int(month), int(day), int(hh), int(mm))
             self.date_time = self.date_time - datetime.timedelta(hours=9)
 
-        # Title matching!
-        if self.song_title.value == '':
-            self.song_title.value = "Unknown"
 
         if self.debug:
             echo = True
