@@ -49,6 +49,8 @@ class DDRScreenshot(object):
 
     speed_mod = None
 
+    album_art = None
+
     # T/D
     date_stamp = None   # Good validation target!!!
 
@@ -88,6 +90,8 @@ class DDRScreenshot(object):
         self.speed_mod = self.base_img.crop((387*mult, 258*mult, 403*mult, 274*mult))
 
         self.date_stamp = self.base_img.crop((424*mult, 378*mult, 572*mult, 394*mult))
+
+        self.album_art = self.base_img.crop((19*mult, 17*mult, 138*mult, 136*mult))
 
     def debug_show(self):
         for attr in vars(self):
