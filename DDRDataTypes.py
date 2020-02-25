@@ -198,7 +198,7 @@ class DDRParsedData(object):
     def validate(self):
         # Sometimes the dark 0, can trip it up. Since Scores < 100k are VERY unlikely we'll sanitize across just <1mil
         money_score = int(self.play_money_score.value.strip())
-        if money_score > 1000000:
+        while money_score > 1000000:
             self.play_money_score.value = str(money_score - 1000000)
             money_score = money_score - 1000000
 
@@ -313,9 +313,6 @@ class DDRParsedData(object):
             self.date_time = datetime.datetime(int(year), int(month), int(day), int(hh), int(mm))
             self.date_time = self.date_time - datetime.timedelta(hours=9)
 
-        # Title matching!
-        if self.song_title.value == '':
-            self.song_title.value = "Unknown"
 
         if self.debug:
             echo = True
@@ -341,7 +338,7 @@ class DDRParsedData(object):
                     self.title_conf = eng_ratio
             elif jpn_ratio > eng_ratio:
                 self.song_title.value = jpn_title
-                self.song_artist.value = jpn_title
+                self.song_artist.value = jpn_artist
                 self.title_conf = jpn_ratio
             else:
                 self.song_title.value = title
