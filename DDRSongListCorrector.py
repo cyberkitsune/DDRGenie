@@ -16,13 +16,13 @@ class DDRSongCorrector(object):
         for song in self.songs:
             print(song)
 
-    def check_title(self, title):
+    def check_title(self, title, artist):
         if self.echo:
             print("Checking", title, "!")
         winner = (0, ('', ''))
         for song in self.songs:
-            s_1 = title.lower().strip()
-            s_2 = song[0].lower().strip()
+            s_1 = "%s %s" % (title.lower().strip(), artist.lower().strip())
+            s_2 = "%s %s" % (song[0].lower().strip(), song[1].lower().strip())
             ratio = SequenceMatcher(a=s_1, b=s_2).ratio()
             if ratio > winner[0]:
                 winner = (ratio, song)
@@ -32,11 +32,11 @@ class DDRSongCorrector(object):
 
         return winner[0], winner[1][0].rstrip(), winner[1][1].rstrip()
 
-    def dump_ratios(self, title):
+    def dump_ratios(self, title, artist):
         ratios = []
         for song in self.songs:
-            s_1 = title.lower().strip()
-            s_2 = song[0].lower().strip()
+            s_1 = "%s %s" % (title.lower().strip(), artist.lower().strip())
+            s_2 = "%s %s" % (song[0].lower().strip(), song[1].lower().strip())
             ratio = SequenceMatcher(a=s_1, b=s_2).ratio()
             ratios.append((ratio, song))
 
