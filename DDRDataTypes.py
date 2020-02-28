@@ -87,8 +87,8 @@ class DDRScreenshot(object):
         self.song_title = self.base_img.crop((148*mult, 33*mult, 577*mult, 58*mult))
         self.song_artist = self.base_img.crop((150*mult, 64*mult, 578*mult, 80*mult))
 
-        self.chart_play_mode = self.base_img.crop((152*mult, 93*mult, 230*mult, 115*mult))
-        self.chart_difficulty = self.base_img.crop((150*mult, 114*mult, 225*mult, 130*mult))
+        self.chart_play_mode = self.base_img.crop((160*mult, 95*mult, 239*mult, 112*mult))
+        self.chart_difficulty = self.base_img.crop((160*mult, 113*mult, 239*mult, 130*mult))
         self.chart_difficulty_number = self.base_img.crop((228*mult, 94*mult, 299*mult, 131*mult))
 
         self.play_grade = self.base_img.crop((70*mult, 165*mult, 189*mult, 242*mult))
@@ -130,8 +130,10 @@ class DDRPartData(object):
         self.sharpen = sharpen
         self.lang = lang
         self.i = None
+        self.orig_i = None
 
     def parse_from(self, i):
+        self.orig_i = i
         self.i = i
         if self.invert:
             self.i = PIL.ImageOps.invert(self.i)
@@ -141,8 +143,8 @@ class DDRPartData(object):
         self.parsed = True
 
     def redo(self):
-        if self.i is not None:
-            self.parse_from(self.i)
+        if self.orig_i is not None:
+            self.parse_from(self.orig_i)
 
     def debug_show(self):
         if self.i is not None:
@@ -204,6 +206,8 @@ class DDRParsedData(object):
             p = getattr(self, var)
             if isinstance(p, DDRPartData):
                 p.parse_from(getattr(ss, var))
+                if debug:
+                    p.debug_show()
 
         self.validate()
 
@@ -283,6 +287,10 @@ class DDRParsedData(object):
 
         if mode_conf > 0.40:
             self.chart_play_mode.value = new_mode
+        else:
+            # I've only ever encountered this on gold cab versus. The contrast of versus fucks with the OCR a lot.
+            # Considering the statistics I think it's safe to default to single (versus is considered single anyway...)
+            self.chart_play_mode.value = 'SINGLE'
 
         if diff_conf > 0.40:
             self.chart_difficulty.value = new_diff
