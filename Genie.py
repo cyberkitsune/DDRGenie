@@ -44,8 +44,6 @@ if __name__ == "__main__":
         mult = 1
 
     i = DDRScreenshot(sshot, size_multiplier=mult)
-    if do_debug:
-        i.debug_show()
 
     d = DDRParsedData(i, debug=do_debug)
     print("%s|%s (C: %f)|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % (d.dancer_name, d.song_title, d.title_conf, d.song_artist, d.play_letter_grade, d.play_money_score, d.play_max_combo,
