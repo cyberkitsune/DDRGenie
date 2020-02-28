@@ -9,6 +9,24 @@ import PIL.ImageFilter
 import pytesseract
 import os
 import datetime
+from difflib import SequenceMatcher
+
+
+def check_known_seq(check_string, valid_options, debug=False):
+    if debug:
+        print("Checking", check_string, "!")
+    winner = (0, '')
+    for option in valid_options:
+        s_1 = check_string.lower().strip()
+        s_2 = option.lower().strip()
+        ratio = SequenceMatcher(a=s_1, b=s_2).ratio()
+        if ratio > winner[0]:
+            winner = (ratio, option)
+
+    if debug:
+        print("%s won at %f" % (winner[1].rstrip(), winner[0]))
+
+    return winner[0], winner[1]
 
 
 class DDRScreenshot(object):
@@ -258,30 +276,16 @@ class DDRParsedData(object):
         if ocr_ex != calc_ex:
             self.play_ex_score.value = "%s* [%s]" % (str(calc_ex), ocr_ex)
 
-        # Sanitize mode / diff
-        if 'ERS' in self.chart_play_mode.value:
-            self.chart_play_mode.value = 'VERSUS'
+        # Correct difficulty and mode
+        mode_conf, new_mode = check_known_seq(self.chart_play_mode.value, ['VERSUS', 'SINGLE', 'DOUBLE'])
 
-        if 'SING' in self.chart_play_mode.value:
-            self.chart_play_mode.value = 'SINGLE'
+        diff_conf, new_diff = check_known_seq(self.chart_difficulty.value, ['BEGINNER', 'BASIC', 'DIFFICULT', 'EXPERT', 'CHALLENGE'])
 
-        if 'DOUB' in self.chart_play_mode.value:
-            self.chart_play_mode.value = 'DOUBLE'
+        if mode_conf > 0.40:
+            self.chart_play_mode.value = new_mode
 
-        if 'BEGI' in self.chart_difficulty.value:
-            self.chart_difficulty.value = 'BEGINNER'
-
-        if 'BASI' in self.chart_difficulty.value:
-            self.chart_difficulty.value = 'BASIC'
-
-        if 'DIFF' in self.chart_difficulty.value:
-            self.chart_difficulty.value = 'DIFFICULT'
-
-        if 'EXP' in self.chart_difficulty.value:
-            self.chart_difficulty.value = 'EXPERT'
-
-        if 'CHA' in self.chart_difficulty.value:
-            self.chart_difficulty.value = 'CHALLENGE'
+        if diff_conf > 0.40:
+            self.chart_difficulty.value = new_diff
 
         # FC Calc
         if int(self.score_miss_count.value) == 0:
@@ -312,7 +316,6 @@ class DDRParsedData(object):
             self.date_stamp.value = "%s.%s.%s %s:%s" % (year, month, day, hh, mm)
             self.date_time = datetime.datetime(int(year), int(month), int(day), int(hh), int(mm))
             self.date_time = self.date_time - datetime.timedelta(hours=9)
-
 
         if self.debug:
             echo = True
