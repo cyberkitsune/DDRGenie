@@ -91,7 +91,7 @@ class DDRScreenshot(object):
         self.chart_difficulty = self.base_img.crop((160*mult, 113*mult, 239*mult, 130*mult))
         self.chart_difficulty_number = self.base_img.crop((228*mult, 94*mult, 286*mult, 131*mult))
 
-        self.play_grade = self.base_img.crop((70*mult, 165*mult, 189*mult, 242*mult))
+        self.play_grade = self.base_img.crop((85*mult, 165*mult, 189*mult, 242*mult))
         self.play_new_records = self.base_img.crop((220*mult, 136*mult, 357*mult, 161*mult))
         self.play_money_score = self.base_img.crop((218*mult, 164*mult, 365*mult, 192*mult))
         self.play_target_diff = self.base_img.crop((251*mult, 191*mult, 386*mult, 207*mult))
@@ -132,6 +132,7 @@ class DDRPartData(object):
         self.i = None
         self.orig_i = None
         self.pre_binarize = pre_binarize
+        self.threshold = 100
 
     def parse_from(self, i):
         self.orig_i = i
@@ -143,8 +144,7 @@ class DDRPartData(object):
         if self.pre_binarize:
             # Binarize
             im2 = self.i.convert("L")
-            threshold = 100
-            self.i = im2.point(lambda p: p > threshold and 255)
+            self.i = im2.point(lambda p: p > self.threshold and 255)
         self.value = pytesseract.image_to_string(self.i, lang=self.lang, config=self.config)
         self.parsed = True
 
@@ -175,7 +175,7 @@ class DDRParsedData(object):
         self.chart_difficulty_number = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
 
         # Play info
-        # play_grade = None
+        self.play_grade = DDRPartData("--psm 10 --oem 3", True, pre_binarize=True)
         self.play_letter_grade = None
         self.play_full_combo = ''
         # play_new_records = None
@@ -263,6 +263,11 @@ class DDRParsedData(object):
             self.play_letter_grade = "D"
         else:
             self.play_letter_grade = "D / E?"
+
+        if self.debug:
+            print("LTR Grade: %s" % self.play_grade.value)
+        if self.play_grade.value == 'E':
+            self.play_letter_grade = "E"
 
         # EXScore Correction
         try:
