@@ -124,13 +124,14 @@ class DDRPartData(object):
     config = None
     parsed = False
 
-    def __init__(self, config="", invert=False, sharpen=False, lang='eng'):
+    def __init__(self, config="", invert=False, sharpen=False, lang='eng', pre_binarize=False):
         self.config = config
         self.invert = invert
         self.sharpen = sharpen
         self.lang = lang
         self.i = None
         self.orig_i = None
+        self.pre_binarize = pre_binarize
 
     def parse_from(self, i):
         self.orig_i = i
@@ -139,6 +140,11 @@ class DDRPartData(object):
             self.i = PIL.ImageOps.invert(self.i)
         if self.sharpen:
             self.i = self.i.filter(PIL.ImageFilter.SHARPEN)
+        if self.pre_binarize:
+            # Binarize
+            im2 = self.i.convert("L")
+            threshold = 100
+            self.i = im2.point(lambda p: p > threshold and 255)
         self.value = pytesseract.image_to_string(self.i, lang=self.lang, config=self.config)
         self.parsed = True
 
@@ -158,39 +164,39 @@ class DDRParsedData(object):
 
     def __init__(self, ss, debug=False):
         self.debug = debug
-        self.dancer_name = DDRPartData("--psm 8 --oem 3", True, lang="eng+jpn")
+        self.dancer_name = DDRPartData("--psm 8 --oem 3", True, lang="eng+jpn", pre_binarize=True)
 
-        self.song_title = DDRPartData("--psm 7", False, lang="eng+jpn")
-        self.song_artist = DDRPartData("--psm 7", True, lang="eng+jpn")
+        self.song_title = DDRPartData("--psm 7", False, lang="eng+jpn", pre_binarize=True)
+        self.song_artist = DDRPartData("--psm 7", True, lang="eng+jpn", pre_binarize=True)
 
         # Chart info
         self.chart_play_mode = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
         self.chart_difficulty = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
-        self.chart_difficulty_number = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
+        self.chart_difficulty_number = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
 
         # Play info
         # play_grade = None
         self.play_letter_grade = None
         self.play_full_combo = ''
         # play_new_records = None
-        self.play_money_score = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
+        self.play_money_score = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
         #self.play_target_diff = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=-+0123456789", True)
-        self.play_max_combo = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
-        self.play_ex_score = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)
+        self.play_max_combo = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
+        self.play_ex_score = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
 
         # Score info
-        self.score_marv_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False)
-        self.score_perfect_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False)
-        self.score_great_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False)
-        self.score_good_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False)
-        self.score_OK_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False)
-        self.score_miss_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False)
+        self.score_marv_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False, pre_binarize=True)
+        self.score_perfect_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False, pre_binarize=True)
+        self.score_great_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False, pre_binarize=True)
+        self.score_good_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False, pre_binarize=True)
+        self.score_OK_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False, pre_binarize=True)
+        self.score_miss_count = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, False, pre_binarize=True)
 
         # Speedmod is not accurate yet...
         self.speed_mod = DDRPartData("--psm 7 --oem 3 -c tessedit_char_whitelist=123456789.xX", True, True)
 
         # T/D
-        self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True)  # Good validation target!!!
+        self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)  # Good validation target!!!
 
         self.title_conf = -1
 

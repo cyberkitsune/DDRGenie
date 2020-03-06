@@ -40,6 +40,8 @@ if __name__ == "__main__":
                 r1 = requests.get(js['output_url'])
                 reqdata = io.BytesIO(r1.content)
                 sshot = Image.open(reqdata)
+                if do_debug:
+                    sshot.save("%s-2x.png" % sys.argv[1], format='PNG')
     else:
         mult = 1
 
