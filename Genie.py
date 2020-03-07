@@ -1,5 +1,6 @@
 from PIL import Image
 from DDRDataTypes import DDRScreenshot, DDRParsedData
+from IIDXDataTypes import IIDXScreenshot, IIDXParsedData
 import sys, requests, io, os
 
 if __name__ == "__main__":
@@ -11,6 +12,16 @@ if __name__ == "__main__":
         do_debug = True
     else:
         do_debug = False
+
+    if sshot.width == 400:
+        sst = IIDXScreenshot
+        pdt = IIDXParsedData
+    elif sshot.width == 600:
+        sst = DDRScreenshot
+        pdt = DDRParsedData
+    else:
+        sst = None
+        pdt = None
 
     if 'upscale' in sys.argv:
         if not os.path.exists('deepai_key.txt'):
@@ -45,10 +56,15 @@ if __name__ == "__main__":
     else:
         mult = 1
 
-    i = DDRScreenshot(sshot, size_multiplier=mult)
+    if sst is not None:
+        i = sst(sshot, size_multiplier=mult)
 
-    d = DDRParsedData(i, debug=do_debug)
-    print("%s|%s (C: %f)|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % (d.dancer_name, d.song_title, d.title_conf, d.song_artist, d.play_letter_grade, d.play_money_score, d.play_max_combo,
+        d = pdt(i, debug=do_debug)
+
+        if isinstance(d, DDRParsedData):
+            print("%s|%s (C: %f)|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % (d.dancer_name, d.song_title, d.title_conf, d.song_artist, d.play_letter_grade, d.play_money_score, d.play_max_combo,
                                                       d.play_ex_score, d.score_marv_count, d.score_perfect_count, d.score_great_count,
                                                       d.score_good_count, d.score_OK_count, d.score_miss_count, d.speed_mod, d.date_stamp,
                                                                           d.chart_difficulty, d.chart_play_mode, d.chart_difficulty_number))
+        elif isinstance(d, IIDXParsedData):
+            print(d)

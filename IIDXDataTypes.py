@@ -82,26 +82,26 @@ class IIDXScreenshot(object):
         self.song_artist = self.base_img.crop((17*mult, 174*mult, 382*mult, 191*mult))
 
         self.chart_play_mode = self.base_img.crop((19*mult, 129*mult, 43*mult, 146*mult))
-        self.chart_difficulty = self.base_img.crop((47*mult, 129*mult, 119*mult, 146*mult))
+        self.chart_difficulty = self.base_img.crop((49*mult, 131*mult, 117*mult, 144*mult))
 
-        self.play_clear_type = self.base_img.crop((203*mult, 220*mult, 286*mult, 246*mult))
-        self.play_dj_level = self.base_img.crop((203*mult, 248*mult, 286*mult, 273*mult))
-        self.play_ex_score = self.base_img.crop((203*mult, 276*mult, 286*mult, 301*mult))
-        self.play_miss_count = self.base_img.crop((203*mult, 304*mult, 286*mult, 329*mult))
+        self.play_clear_type = self.base_img.crop((203*mult, 223*mult, 276*mult, 246*mult))
+        self.play_dj_level = self.base_img.crop((203*mult, 251*mult, 276*mult, 273*mult))
+        self.play_ex_score = self.base_img.crop((203*mult, 279*mult, 276*mult, 301*mult))
+        self.play_miss_count = self.base_img.crop((203*mult, 307*mult, 276*mult, 329*mult))
 
         self.tracker_target = self.base_img.crop((17*mult, 359*mult, 201*mult, 385*mult))
-        self.tracker_value = self.base_img.crop((203*mult, 359*mult, 286*mult, 384*mult))
+        self.tracker_value = self.base_img.crop((203*mult, 362*mult, 276*mult, 384*mult))
 
-        self.score_rainbow_count = self.base_img.crop((126*mult, 395*mult, 198*mult, 417*mult))
-        self.score_great_count = self.base_img.crop((126*mult, 418*mult, 198*mult, 440*mult)) # + ,23
-        self.score_good_count = self.base_img.crop((126*mult, 441*mult, 198*mult, 463*mult))
-        self.score_bad_count = self.base_img.crop((126*mult, 464*mult, 198*mult, 486*mult))
-        self.score_poor_count = self.base_img.crop((126*mult, 487*mult, 198*mult, 509*mult))
+        self.score_rainbow_count = self.base_img.crop((126*mult, 398*mult, 198*mult, 417*mult))
+        self.score_great_count = self.base_img.crop((126*mult, 420*mult, 198*mult, 440*mult)) # + ,23
+        self.score_good_count = self.base_img.crop((126*mult, 444*mult, 198*mult, 463*mult))
+        self.score_bad_count = self.base_img.crop((126*mult, 467*mult, 198*mult, 486*mult))
+        self.score_poor_count = self.base_img.crop((126*mult, 490*mult, 198*mult, 509*mult))
 
-        self.score_combo_break = self.base_img.crop((126*mult, 512*mult, 198*mult, 534*mult))
+        self.score_combo_break = self.base_img.crop((126*mult, 515*mult, 198*mult, 534*mult))
 
-        self.score_fast_count = self.base_img.crop((126*mult, 537*mult, 198*mult, 559*mult))
-        self.score_slow_count = self.base_img.crop((126*mult, 560*mult, 198*mult, 582*mult))
+        self.score_fast_count = self.base_img.crop((126*mult, 540*mult, 198*mult, 559*mult))
+        self.score_slow_count = self.base_img.crop((126*mult, 563*mult, 198*mult, 582*mult))
 
         self.date_stamp = self.base_img.crop((12*mult, 14*mult, 153*mult, 38*mult))  # Good validation target!!!
 
@@ -126,7 +126,7 @@ class IIDXPartData(object):
         self.i = None
         self.orig_i = None
         self.pre_binarize = pre_binarize
-        self.threshold = 100
+        self.threshold = 210
 
     def parse_from(self, i):
         self.orig_i = i
@@ -160,25 +160,26 @@ class IIDXParsedData(object):
         self.debug = debug
         self.dj_name = IIDXPartData("--psm 8 --oem 3", True, lang="eng+jpn", pre_binarize=True)
 
-        self.song_title = IIDXPartData("--psm 7", False, lang="eng+jpn", pre_binarize=True)
-        self.song_artist = IIDXPartData("--psm 7", False, lang="eng+jpn", pre_binarize=True)
+        self.song_title = IIDXPartData("--psm 7", True, lang="eng+jpn", pre_binarize=True)
+        self.song_artist = IIDXPartData("--psm 7", True, lang="eng+jpn", pre_binarize=True)
 
         self.chart_play_mode = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
-        self.chart_difficulty = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
+        self.chart_difficulty = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
+        self.chart_difficulty.threshold = 115
 
-        self.play_clear_type = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
-        self.play_dj_level = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
+        self.play_clear_type = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
+        self.play_dj_level = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
         self.play_ex_score = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
         self.play_miss_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
 
-        self.tracker_target = self.base_img.crop((17 * mult, 359 * mult, 201 * mult, 385 * mult))
+        self.tracker_target = IIDXPartData("--psm 7", True, lang="eng+jpn", pre_binarize=True)
         self.tracker_value = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
 
-        self.score_rainbow_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
-        self.score_great_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
-        self.score_good_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
-        self.score_bad_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
-        self.score_poor_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
+        self.score_rainbow_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang="eng+jpn")
+        self.score_great_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang="eng+jpn")
+        self.score_good_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang="eng+jpn")
+        self.score_bad_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang="eng+jpn")
+        self.score_poor_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang="eng+jpn")
 
         self.score_combo_break = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
 
