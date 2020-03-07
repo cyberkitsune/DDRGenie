@@ -58,7 +58,8 @@ if __name__ == "__main__":
 
     if sst is not None:
         i = sst(sshot, size_multiplier=mult)
-
+        if do_debug:
+            i.base_img.show()
         d = pdt(i, debug=do_debug)
 
         if isinstance(d, DDRParsedData):
