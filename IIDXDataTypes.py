@@ -192,7 +192,7 @@ class IIDXParsedData(object):
         self.score_fast_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
         self.score_slow_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
 
-        self.date_stamp = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
+        self.date_stamp = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789-", True, pre_binarize=True)
 
         self.date_time = None
 
