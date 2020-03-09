@@ -129,6 +129,9 @@ class IIDXPartData(object):
         self.threshold = 210
         self.rescale = rescale
         self.erode = erode
+        if self.lang == 'iidx':
+            folder = os.path.dirname(os.path.realpath(__file__))
+            self.config = self.config + " --tessdata-dir \"%s/genie_assets/\"" % folder
 
     def parse_from(self, i):
         self.orig_i = i
