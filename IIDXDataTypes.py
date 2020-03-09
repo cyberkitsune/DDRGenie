@@ -175,22 +175,22 @@ class IIDXParsedData(object):
 
         self.play_clear_type = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
         self.play_dj_level = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
-        self.play_ex_score = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
-        self.play_miss_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
+        self.play_ex_score = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
+        self.play_miss_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
 
         self.tracker_target = IIDXPartData("--psm 7", True, lang="eng+jpn", pre_binarize=True)
-        self.tracker_value = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
+        self.tracker_value = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
 
-        self.score_rainbow_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, erode=3)
-        self.score_great_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, erode=3)
-        self.score_good_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, erode=3)
-        self.score_bad_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, erode=3)
-        self.score_poor_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, erode=3)
+        self.score_rainbow_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
+        self.score_great_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
+        self.score_good_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
+        self.score_bad_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
+        self.score_poor_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
 
-        self.score_combo_break = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, erode=3)
+        self.score_combo_break = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
 
-        self.score_fast_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, erode=3)
-        self.score_slow_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, erode=3)
+        self.score_fast_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
+        self.score_slow_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
 
         self.date_stamp = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
 
