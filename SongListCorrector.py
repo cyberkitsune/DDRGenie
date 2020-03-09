@@ -1,7 +1,7 @@
 from difflib import SequenceMatcher
 
 
-class DDRSongCorrector(object):
+class SongListCorrector(object):
 
     def __init__(self, songfile, echo=False):
         self.songs = []
