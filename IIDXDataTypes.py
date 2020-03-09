@@ -98,7 +98,7 @@ class IIDXScreenshot(object):
         self.score_bad_count = self.base_img.crop((126*mult, 467*mult, 198*mult, 486*mult))
         self.score_poor_count = self.base_img.crop((126*mult, 490*mult, 198*mult, 509*mult))
 
-        self.score_combo_break = self.base_img.crop((126*mult, 515*mult, 198*mult, 534*mult))
+        self.score_combo_break = self.base_img.crop((128*mult, 515*mult, 198*mult, 534*mult))
 
         self.score_fast_count = self.base_img.crop((126*mult, 540*mult, 198*mult, 559*mult))
         self.score_slow_count = self.base_img.crop((126*mult, 563*mult, 198*mult, 582*mult))
