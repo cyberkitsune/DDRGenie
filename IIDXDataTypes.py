@@ -6,6 +6,10 @@ import pytesseract
 import os
 import datetime
 from difflib import SequenceMatcher
+try:
+    from .SongListCorrector import SongListCorrector
+except ImportError:
+    from SongListCorrector import SongListCorrector
 
 
 def check_known_seq(check_string, valid_options, debug=False):
@@ -198,6 +202,7 @@ class IIDXParsedData(object):
         self.date_stamp = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789-", True, pre_binarize=True)
 
         self.date_time = None
+        self.title_conf = None
 
 
         if not isinstance(ss, IIDXScreenshot):
@@ -236,6 +241,9 @@ class IIDXParsedData(object):
 
         # Time formatting
         self.date_stamp.value = self.date_stamp.value.replace(" ", "")
+        self.date_stamp.value = self.date_stamp.value.replace("-", "")
+        self.date_stamp.value = self.date_stamp.value.replace(".", "")
+        self.date_stamp.value = self.date_stamp.value.replace(":", "")
         if len(self.date_stamp.value) != 12:
             self.date_stamp.value = "Unknown (Parsed: %s)" % self.date_stamp.value
         else:
@@ -248,14 +256,12 @@ class IIDXParsedData(object):
             self.date_time = datetime.datetime(int(year), int(month), int(day), int(hh), int(mm))
             self.date_time = self.date_time - datetime.timedelta(hours=9)
 
-
-        '''
-         if self.debug:
+        if self.debug:
             echo = True
         else:
             echo = False
         folder = os.path.dirname(__file__)
-        slc = DDRSongCorrector("%s/genie_assets/a20_songlist.txt" % folder, echo=echo)
+        slc = SongListCorrector("%s/genie_assets/iidx_songlist.txt" % folder, echo=echo)
         eng_ratio, title, artist = slc.check_title(self.song_title.value, self.song_artist.value)
 
         # Try and reparse...
@@ -284,4 +290,4 @@ class IIDXParsedData(object):
             self.song_title.value = title
             self.song_artist.value = artist
             self.title_conf = eng_ratio
-        '''
+
