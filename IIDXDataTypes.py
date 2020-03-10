@@ -89,7 +89,7 @@ class IIDXScreenshot(object):
         self.chart_difficulty = self.base_img.crop((49*mult, 131*mult, 117*mult, 144*mult))
 
         self.play_clear_type = self.base_img.crop((203*mult, 223*mult, 276*mult, 246*mult))
-        self.play_dj_level = self.base_img.crop((203*mult, 251*mult, 276*mult, 273*mult))
+        self.play_dj_level = self.base_img.crop((203*mult, 251*mult, 274*mult, 273*mult))
         self.play_ex_score = self.base_img.crop((203*mult, 279*mult, 276*mult, 301*mult))
         self.play_miss_count = self.base_img.crop((203*mult, 307*mult, 276*mult, 329*mult))
 
@@ -134,7 +134,7 @@ class IIDXPartData(object):
         self.rescale = rescale
         self.erode = erode
 
-        if lang == 'iidx' or lang == 'iidx-grade':
+        if lang == 'iidx' or lang == 'iidx-grade' or lang == 'iidx-clr':
             folder = os.path.dirname(os.path.realpath(__file__))
             self.config = self.config + " --tessdata-dir \"%s/genie_assets/\"" % folder
 
@@ -181,7 +181,7 @@ class IIDXParsedData(object):
         self.chart_difficulty = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
         self.chart_difficulty.threshold = 115
 
-        self.play_clear_type = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
+        self.play_clear_type = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True, lang='iidx-clr+eng')
         self.play_dj_level = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True, lang='iidx-grade')
         self.play_ex_score = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
         self.play_miss_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
@@ -232,6 +232,13 @@ class IIDXParsedData(object):
 
         diff_conf, new_diff = check_known_seq(self.chart_difficulty.value, ['BEGINNER', 'NORMAL', 'HYPER', 'ANOTHER'])
 
+        self.play_clear_type.value.replace('€', 'E')
+
+        clr_conf, new_clr = check_known_seq(self.play_clear_type.value, ['NO PLAY', 'FAILED', 'CLEAR', 'E-CLEAR', 'A-CLEAR',
+                                                                         'H-CLEAR', 'EXH-CLEAR', 'F-COMBO'])
+
+        grade_conf, new_grade = check_known_seq(self.play_dj_level.value, ['E', 'F', 'D', 'C', 'B', 'A', 'AA', 'AAA'])
+
         if mode_conf > 0.40:
             self.chart_play_mode.value = new_mode
         else:
@@ -239,6 +246,12 @@ class IIDXParsedData(object):
 
         if diff_conf > 0.40:
             self.chart_difficulty.value = new_diff
+
+        if clr_conf > 0.40:
+            self.play_clear_type.value = new_clr
+
+        if grade_conf > 0.40:
+            self.play_dj_level.value = new_grade
 
         # Time formatting
         self.date_stamp.value = self.date_stamp.value.replace(" ", "")
