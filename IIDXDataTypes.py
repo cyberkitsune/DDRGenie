@@ -204,7 +204,7 @@ class IIDXParsedData(object):
 
         self.date_time = None
         self.title_conf = None
-
+        self.overall_conf = 0
 
         if not isinstance(ss, IIDXScreenshot):
             raise Exception("Not a IIDX screenshot...")
@@ -304,4 +304,7 @@ class IIDXParsedData(object):
             self.song_title.value = title
             self.song_artist.value = artist
             self.title_conf = eng_ratio
+
+        self.overall_conf = ((self.title_conf * 100) + (grade_conf * 100) + (clr_conf * 100) + (diff_conf * 100) +
+                             (mode_conf * 100)) / 5
 
