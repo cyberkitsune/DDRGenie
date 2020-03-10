@@ -133,7 +133,8 @@ class IIDXPartData(object):
         self.threshold = 210
         self.rescale = rescale
         self.erode = erode
-        if self.lang == 'iidx':
+
+        if lang == 'iidx' or lang == 'iidx-grade':
             folder = os.path.dirname(os.path.realpath(__file__))
             self.config = self.config + " --tessdata-dir \"%s/genie_assets/\"" % folder
 
@@ -181,7 +182,7 @@ class IIDXParsedData(object):
         self.chart_difficulty.threshold = 115
 
         self.play_clear_type = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
-        self.play_dj_level = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
+        self.play_dj_level = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True, lang='iidx-grade')
         self.play_ex_score = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
         self.play_miss_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
 
