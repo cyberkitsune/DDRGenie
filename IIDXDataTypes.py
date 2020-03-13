@@ -178,7 +178,7 @@ class IIDXParsedData(object):
         self.song_artist = IIDXPartData("--psm 7", True, lang="eng+jpn", pre_binarize=True)
 
         self.chart_play_mode = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
-        self.chart_difficulty = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
+        self.chart_difficulty = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=False)
         self.chart_difficulty.threshold = 115
 
         self.play_clear_type = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True, lang='iidx-clr+eng')
