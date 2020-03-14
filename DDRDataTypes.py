@@ -173,6 +173,7 @@ class DDRParsedData(object):
         self.chart_play_mode = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
         self.chart_difficulty = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
         self.chart_difficulty_number = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
+        self.chart_difficulty_number.threshold = 70
 
         # Play info
         self.play_grade = DDRPartData("--psm 10 --oem 3", True, pre_binarize=True)
