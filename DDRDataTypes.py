@@ -265,6 +265,9 @@ class DDRParsedData(object):
         else:
             self.play_letter_grade = "D / E?"
 
+        if self.chart_difficulty_number.value == '':
+            self.chart_difficulty_number.value = '0'
+
         if self.debug:
             print("LTR Grade: %s" % self.play_grade.value)
         if self.play_grade.value == 'E':
