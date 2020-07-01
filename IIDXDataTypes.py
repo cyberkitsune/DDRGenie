@@ -6,6 +6,10 @@ import pytesseract
 import os
 import datetime
 from difflib import SequenceMatcher
+try:
+    from .SongListCorrector import SongListCorrector
+except ImportError:
+    from SongListCorrector import SongListCorrector
 
 
 def check_known_seq(check_string, valid_options, debug=False):
@@ -85,7 +89,7 @@ class IIDXScreenshot(object):
         self.chart_difficulty = self.base_img.crop((49*mult, 131*mult, 117*mult, 144*mult))
 
         self.play_clear_type = self.base_img.crop((203*mult, 223*mult, 276*mult, 246*mult))
-        self.play_dj_level = self.base_img.crop((203*mult, 251*mult, 276*mult, 273*mult))
+        self.play_dj_level = self.base_img.crop((203*mult, 251*mult, 274*mult, 273*mult))
         self.play_ex_score = self.base_img.crop((203*mult, 279*mult, 276*mult, 301*mult))
         self.play_miss_count = self.base_img.crop((203*mult, 307*mult, 276*mult, 329*mult))
 
@@ -98,7 +102,7 @@ class IIDXScreenshot(object):
         self.score_bad_count = self.base_img.crop((126*mult, 467*mult, 198*mult, 486*mult))
         self.score_poor_count = self.base_img.crop((126*mult, 490*mult, 198*mult, 509*mult))
 
-        self.score_combo_break = self.base_img.crop((126*mult, 515*mult, 198*mult, 534*mult))
+        self.score_combo_break = self.base_img.crop((128*mult, 515*mult, 198*mult, 534*mult))
 
         self.score_fast_count = self.base_img.crop((126*mult, 540*mult, 198*mult, 559*mult))
         self.score_slow_count = self.base_img.crop((126*mult, 563*mult, 198*mult, 582*mult))
@@ -129,6 +133,10 @@ class IIDXPartData(object):
         self.threshold = 210
         self.rescale = rescale
         self.erode = erode
+
+        if lang == 'iidx' or lang == 'iidx-grade' or lang == 'iidx-clr':
+            folder = os.path.dirname(os.path.realpath(__file__))
+            self.config = self.config + " --tessdata-dir \"%s/genie_assets/\"" % folder
 
     def parse_from(self, i):
         self.orig_i = i
@@ -170,11 +178,11 @@ class IIDXParsedData(object):
         self.song_artist = IIDXPartData("--psm 7", True, lang="eng+jpn", pre_binarize=True)
 
         self.chart_play_mode = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
-        self.chart_difficulty = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
+        self.chart_difficulty = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=False)
         self.chart_difficulty.threshold = 115
 
-        self.play_clear_type = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
-        self.play_dj_level = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True)
+        self.play_clear_type = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True, lang='iidx-clr+eng')
+        self.play_dj_level = IIDXPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True, pre_binarize=True, lang='iidx-grade')
         self.play_ex_score = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
         self.play_miss_count = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True, lang='iidx')
 
@@ -195,7 +203,8 @@ class IIDXParsedData(object):
         self.date_stamp = IIDXPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789-", True, pre_binarize=True)
 
         self.date_time = None
-
+        self.title_conf = None
+        self.overall_conf = 0
 
         if not isinstance(ss, IIDXScreenshot):
             raise Exception("Not a IIDX screenshot...")
@@ -223,6 +232,13 @@ class IIDXParsedData(object):
 
         diff_conf, new_diff = check_known_seq(self.chart_difficulty.value, ['BEGINNER', 'NORMAL', 'HYPER', 'ANOTHER'])
 
+        self.play_clear_type.value.replace('€', 'E')
+
+        clr_conf, new_clr = check_known_seq(self.play_clear_type.value, ['NO PLAY', 'FAILED', 'CLEAR', 'E-CLEAR', 'A-CLEAR',
+                                                                         'H-CLEAR', 'EXH-CLEAR', 'F-COMBO'])
+
+        grade_conf, new_grade = check_known_seq(self.play_dj_level.value, ['E', 'F', 'D', 'C', 'B', 'A', 'AA', 'AAA'])
+
         if mode_conf > 0.40:
             self.chart_play_mode.value = new_mode
         else:
@@ -231,8 +247,17 @@ class IIDXParsedData(object):
         if diff_conf > 0.40:
             self.chart_difficulty.value = new_diff
 
+        if clr_conf > 0.40:
+            self.play_clear_type.value = new_clr
+
+        if grade_conf > 0.40:
+            self.play_dj_level.value = new_grade
+
         # Time formatting
         self.date_stamp.value = self.date_stamp.value.replace(" ", "")
+        self.date_stamp.value = self.date_stamp.value.replace("-", "")
+        self.date_stamp.value = self.date_stamp.value.replace(".", "")
+        self.date_stamp.value = self.date_stamp.value.replace(":", "")
         if len(self.date_stamp.value) != 12:
             self.date_stamp.value = "Unknown (Parsed: %s)" % self.date_stamp.value
         else:
@@ -245,14 +270,12 @@ class IIDXParsedData(object):
             self.date_time = datetime.datetime(int(year), int(month), int(day), int(hh), int(mm))
             self.date_time = self.date_time - datetime.timedelta(hours=9)
 
-
-        '''
-         if self.debug:
+        if self.debug:
             echo = True
         else:
             echo = False
         folder = os.path.dirname(__file__)
-        slc = DDRSongCorrector("%s/genie_assets/a20_songlist.txt" % folder, echo=echo)
+        slc = SongListCorrector("%s/genie_assets/iidx_songlist.txt" % folder, echo=echo)
         eng_ratio, title, artist = slc.check_title(self.song_title.value, self.song_artist.value)
 
         # Try and reparse...
@@ -281,4 +304,7 @@ class IIDXParsedData(object):
             self.song_title.value = title
             self.song_artist.value = artist
             self.title_conf = eng_ratio
-        '''
+
+        self.overall_conf = ((self.title_conf * 100) + (grade_conf * 100) + (clr_conf * 100) + (diff_conf * 100) +
+                             (mode_conf * 100)) / 5
+

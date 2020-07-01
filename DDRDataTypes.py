@@ -1,8 +1,8 @@
 from PIL import Image
 try:
-    from .DDRSongListCorrector import DDRSongCorrector
+    from .SongListCorrector import SongListCorrector
 except ImportError:
-    from DDRSongListCorrector import DDRSongCorrector
+    from SongListCorrector import SongListCorrector
 import PIL
 import PIL.ImageOps
 import PIL.ImageFilter
@@ -173,6 +173,7 @@ class DDRParsedData(object):
         self.chart_play_mode = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
         self.chart_difficulty = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
         self.chart_difficulty_number = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
+        self.chart_difficulty_number.threshold = 70
 
         # Play info
         self.play_grade = DDRPartData("--psm 10 --oem 3", True, pre_binarize=True)
@@ -264,6 +265,9 @@ class DDRParsedData(object):
         else:
             self.play_letter_grade = "D / E?"
 
+        if self.chart_difficulty_number.value == '':
+            self.chart_difficulty_number.value = '0'
+
         if self.debug:
             print("LTR Grade: %s" % self.play_grade.value)
         if self.play_grade.value == 'E':
@@ -341,7 +345,7 @@ class DDRParsedData(object):
         else:
             echo = False
         folder = os.path.dirname(__file__)
-        slc = DDRSongCorrector("%s/genie_assets/a20_songlist.txt" % folder, echo=echo)
+        slc = SongListCorrector("%s/genie_assets/a20_songlist.txt" % folder, echo=echo)
         eng_ratio, title, artist = slc.check_title(self.song_title.value, self.song_artist.value)
 
         # Try and reparse...
