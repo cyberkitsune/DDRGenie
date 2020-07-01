@@ -2,3 +2,4 @@ Pillow
 Pillow-PIL
 pytesseract
 requests
+wikitextparser
