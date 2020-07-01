@@ -4,3 +4,4 @@ venv*
 *.jpg
 *.png
 tools/*.txt
+.idea/*
