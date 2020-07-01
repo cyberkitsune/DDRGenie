@@ -29,7 +29,7 @@ if __name__ == "__main__":
     for list in lists:
         for item in list.items:
             # Weird hack to make sure we're the only newline in town
-            songs.append("%s\n" % wtp.remove_markup(item).strip('\n'))
+            songs.append("%s\n" % wtp.remove_markup(item).strip('\n').lstrip())
 
     with open("%s.txt" % page, 'w', encoding='utf-8') as f:
         f.writelines(songs)
