@@ -58,9 +58,15 @@ if __name__ == "__main__":
 
     if sst is not None:
         i = sst(sshot, size_multiplier=mult)
-        d = pdt(i, debug=do_debug)
+        d = pdt(i, debug=False)
 
         if isinstance(d, DDRParsedData):
+            if d.is_course:
+                print("Course screenshot detected!")
+                i = sst(sshot, size_multiplier=mult, course=True)
+                d = pdt(i, debug=do_debug, course=True)
+            else:
+                d = pdt(i, debug=do_debug, course=False)
             print("%s|%s (C: %f)|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % (d.dancer_name, d.song_title, d.title_conf, d.song_artist, d.play_letter_grade, d.play_money_score, d.play_max_combo,
                                                       d.play_ex_score, d.score_marv_count, d.score_perfect_count, d.score_great_count,
                                                       d.score_good_count, d.score_OK_count, d.score_miss_count, d.speed_mod, d.date_stamp,

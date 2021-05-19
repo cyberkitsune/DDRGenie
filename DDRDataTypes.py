@@ -69,15 +69,18 @@ class DDRScreenshot(object):
 
     album_art = None
 
+    groove_radar_top = None
+
     # T/D
     date_stamp = None   # Good validation target!!!
 
-    def __init__(self, base_image, size_multiplier=1):
+    def __init__(self, base_image, size_multiplier=1, course=False):
 
         if not isinstance(base_image, PIL.Image.Image):
             raise Exception("base_image is not an image type!")
         self.size_multiplier = size_multiplier
         self.base_img = base_image
+        self.is_course = course
         self.crop_parts()
 
     def crop_parts(self):
@@ -110,6 +113,17 @@ class DDRScreenshot(object):
         self.date_stamp = self.base_img.crop((424*mult, 378*mult, 572*mult, 394*mult))
 
         self.album_art = self.base_img.crop((19*mult, 17*mult, 138*mult, 136*mult))
+        self.groove_radar_top = self.base_img.crop((456*mult, 109*mult, 502*mult, 120*mult))
+
+        if self.is_course:
+            self.song_title = self.base_img.crop((18*mult, 112*mult, 400*mult, 133*mult))
+            self.song_artist = self.base_img.crop((18*mult, 112 * mult, 400 * mult, 133 * mult))
+
+            self.chart_play_mode = self.base_img.crop((414 * mult, 42 * mult, 493 * mult, 58 * mult))
+            self.chart_difficulty = self.base_img.crop((414 * mult, 60 * mult, 493 * mult, 76 * mult))
+            self.chart_difficulty_number = self.base_img.crop((482 * mult, 40 * mult, 541 * mult, 76 * mult))
+
+            self.album_art = self.base_img.crop((17 * mult, 37 * mult, 405*mult, 106 * mult))
 
     def debug_show(self):
         for attr in vars(self):
@@ -162,7 +176,7 @@ class DDRPartData(object):
 
 class DDRParsedData(object):
 
-    def __init__(self, ss, debug=False):
+    def __init__(self, ss, debug=False, course=False):
         self.debug = debug
         self.dancer_name = DDRPartData("--psm 8 --oem 3", True, lang="eng+jpn", pre_binarize=True)
 
@@ -172,6 +186,11 @@ class DDRParsedData(object):
         # Chart info
         self.chart_play_mode = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
         self.chart_difficulty = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ", True)
+
+        # Pre Binarize this in a course situation in order to compensate for contrast
+        if course:
+            self.chart_difficulty = DDRPartData("--psm 8 --oem 3 tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                                                True, pre_binarize=True)
         self.chart_difficulty_number = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)
         self.chart_difficulty_number.threshold = 70
 
@@ -199,11 +218,16 @@ class DDRParsedData(object):
         # T/D
         self.date_stamp = DDRPartData("--psm 8 --oem 3 -c tessedit_char_whitelist=0123456789", True, pre_binarize=True)  # Good validation target!!!
 
+        # Radar top, should be "STREAM" -- if not it's probably a course...
+        self.groove_radar_top = DDRPartData("--psm 7", True, lang="eng", pre_binarize=True)
+
         self.title_conf = -1
 
         self.date_time = None
 
         self.bad_judge = False
+
+        self.is_course = course
 
         if not isinstance(ss, DDRScreenshot):
             raise Exception("Not a DDR screenshot...")
@@ -225,6 +249,14 @@ class DDRParsedData(object):
         return '\n'.join(outstr)
 
     def validate(self):
+        # Set course mode flag
+        if not self.is_course:
+            maybe_course = self.groove_radar_top.value.lower()
+            if "str" not in maybe_course:
+                self.is_course = True
+
+
+
         # Sometimes the dark 0, can trip it up. Since Scores < 100k are VERY unlikely we'll sanitize across just <1mil
         money_score = int(self.play_money_score.value.strip())
         while money_score > 1000000:
@@ -350,31 +382,35 @@ class DDRParsedData(object):
         else:
             slc = SongListCorrector("%s/genie_assets/a20_songlist.txt" % folder, echo=echo)
 
-        eng_ratio, title, artist = slc.check_title(self.song_title.value, self.song_artist.value)
+        if not self.is_course:
+            eng_ratio, title, artist = slc.check_title(self.song_title.value, self.song_artist.value)
 
-        # Try and reparse...
-        if eng_ratio < 0.40:
-            self.song_title.lang = 'jpn'
-            self.song_title.redo()
-            self.song_artist.lang = 'jpn'
-            self.song_artist.redo()
-            jpn_ratio, jpn_title, jpn_artist = slc.check_title(self.song_title.value, self.song_artist.value)
-            if jpn_ratio < 0.34:
-                self.song_title.value += '?'
-                self.song_artist.value += '?'
-                if jpn_ratio > eng_ratio:
+            # Try and reparse...
+            if eng_ratio < 0.40:
+                self.song_title.lang = 'jpn'
+                self.song_title.redo()
+                self.song_artist.lang = 'jpn'
+                self.song_artist.redo()
+                jpn_ratio, jpn_title, jpn_artist = slc.check_title(self.song_title.value, self.song_artist.value)
+                if jpn_ratio < 0.34:
+                    self.song_title.value += '?'
+                    self.song_artist.value += '?'
+                    if jpn_ratio > eng_ratio:
+                        self.title_conf = jpn_ratio
+                    else:
+                        self.title_conf = eng_ratio
+                elif jpn_ratio > eng_ratio:
+                    self.song_title.value = jpn_title
+                    self.song_artist.value = jpn_artist
                     self.title_conf = jpn_ratio
                 else:
+                    self.song_title.value = title
+                    self.song_artist.value = artist
                     self.title_conf = eng_ratio
-            elif jpn_ratio > eng_ratio:
-                self.song_title.value = jpn_title
-                self.song_artist.value = jpn_artist
-                self.title_conf = jpn_ratio
             else:
                 self.song_title.value = title
                 self.song_artist.value = artist
                 self.title_conf = eng_ratio
         else:
-            self.song_title.value = title
-            self.song_artist.value = artist
-            self.title_conf = eng_ratio
+            self.title_conf = 0.80
+            self.song_artist.value = "Various Artists"
