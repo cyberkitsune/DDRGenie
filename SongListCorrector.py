@@ -1,14 +1,21 @@
 from difflib import SequenceMatcher
+import json as js
 
 
 class SongListCorrector(object):
 
-    def __init__(self, songfile, echo=False):
+    def __init__(self, songfile, echo=False, json=False):
         self.songs = []
         self.echo = echo
+
         with open(songfile, 'r') as f:
-            for line in f.readlines():
-                self.songs.append(tuple(line.strip('\n').split(" / ")))
+            if json:
+                js_data = js.load(f)
+                for song_entry in js_data:
+                    self.songs.append((song_entry['song_title'], song_entry['artist']))
+            else:
+                for line in f.readlines():
+                    self.songs.append(tuple(line.strip('\n').split(" / ")))
         if self.echo:
             print("[SLC] Loaded %i songs!" % len(self.songs))
 

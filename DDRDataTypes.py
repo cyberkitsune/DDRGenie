@@ -345,7 +345,11 @@ class DDRParsedData(object):
         else:
             echo = False
         folder = os.path.dirname(__file__)
-        slc = SongListCorrector("%s/genie_assets/a20_songlist.txt" % folder, echo=echo)
+        if os.path.exists("%s/genie_assets/a20_songlist.json" % folder):
+            slc = SongListCorrector("%s/genie_assets/a20_songlist.json" % folder, echo=echo, json=True)
+        else:
+            slc = SongListCorrector("%s/genie_assets/a20_songlist.txt" % folder, echo=echo)
+
         eng_ratio, title, artist = slc.check_title(self.song_title.value, self.song_artist.value)
 
         # Try and reparse...
